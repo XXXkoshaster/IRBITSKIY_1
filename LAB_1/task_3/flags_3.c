@@ -1,4 +1,4 @@
-#include "functions.h"
+#include "functions_3.h"
 
 void flag_q(char* a, char* b, char* c, char* eps)
 {
@@ -48,11 +48,13 @@ void flag_m(char* a, char* b)
 
 void flag_t(char* eps, char* a, char* b, char* c)
 {   
-    long x = strtol(a, NULL, 10);
-    long y = strtol(b, NULL, 10);
-    long z = strtol(c, NULL, 10);
-    long epsilon = strtol(eps, NULL, 10);
+    double x = atof(a);
+    double y = atof(b);
+    double z = atof(c);
+    double epsilon = atof(eps);
     
+    printf("epsilon: %s, a: %s, b: %s, c: %s\n", eps, a, b, c);
+
     if (is_triangle(x, y, z, epsilon)) {
         printf("Triangle is right\n");
     } else {
