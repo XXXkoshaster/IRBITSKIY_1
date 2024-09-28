@@ -53,8 +53,6 @@ int is_multiple(int a, int b) {
     return (a % b == 0);
 }
 
-#include <math.h>
-
 int is_triangle(double a, double b, double c, double eps) {
     double a2 = a * a;
     double b2 = b * b;
