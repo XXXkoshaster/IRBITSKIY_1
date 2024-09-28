@@ -57,8 +57,8 @@ void convert_to_ascii(FILE* in_file, FILE* out_file)
 const char* generate_out_file(const char* in_file)
 {
     const char* prefix = "out_";
-
-    char* out_file = (char*)malloc(strlen(prefix) + strlen(in_file) + 1);
+    size_t out_file_len = strlen(prefix) + strlen(in_file) + 1;
+    char* out_file = (char*)malloc(out_file_len);
     if (out_file == NULL) {
         printf("Error of emiting memory\n");
         return NULL;
