@@ -2,7 +2,7 @@
 
 int validate_args(int argc, char** argv)
 {
-    if (argc < 3) {
+    if (argc != 3) {
         printf("Usage: %s <in_file> <out_file>\n", argv[0]);
         return 1;
     }
@@ -10,13 +10,14 @@ int validate_args(int argc, char** argv)
 
 void process_files(FILE* in, FILE* out)
 {
-    long long size = get_file_size(in);
-    char buffer[size];
+    char buffer[1024];
 
-    while (fscanf(in, "%s", buffer) == 1) {
+    fprintf(out, "Origin_value  Base  Decimal_value\n");
+
+    while (fscanf(in, "%1023s", buffer) == 1) {
         int base = min_base(buffer);
-        long long decimal = to_decimal(buffer, base);
-        fprintf(out, "%s %d %lld\n", buffer, base, decimal);
+        int decimal = to_decimal(buffer, base);
+        fprintf(out, "%s %d %d\n", buffer, base, decimal);
     }
 }
 
@@ -26,6 +27,7 @@ int min_base(const char* num) {
     for (const char* p = num; *p; p++) {
         char c = tolower(*p);
         int value = (isdigit(c)) ? c - '0' : c - 'a' + 10;
+        
         if (value + 1 > base) {
             base = value + 1;
         }
@@ -34,24 +36,20 @@ int min_base(const char* num) {
     return base;
 }
 
-long long to_decimal(const char* num, int base) {
-    long long result = 0;
+int to_decimal(const char* num, int base) {
+    int result = 0;
 
     for (const char* p = num; *p; p++) {
         char c = tolower(*p);
         int value = (isdigit(c)) ? c - '0' : c - 'a' + 10;
+        
+        if (value >= base) {
+            printf("Invalid digit '%c' for base %d\n", c, base);
+            return -1;
+        }
+
         result = result * base + value;
     }
 
     return result;
-}
-
-long long get_file_size(FILE* file) {
-    fseek(file, 0, SEEK_END);
-
-    long long size = ftell(file);
-
-    fseek(file, 0, SEEK_SET);
-
-    return size;
 }

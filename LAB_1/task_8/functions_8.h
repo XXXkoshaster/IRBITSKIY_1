@@ -7,8 +7,7 @@
 #include <ctype.h>
 
 int min_base(const char* num);
-long long to_decimal(const char* num, int base);
-long long get_file_size(FILE* file);
+int to_decimal(const char* num, int base);
 int validate_args(int argc, char** argv);
 void process_files(FILE* in, FILE* out);
 
