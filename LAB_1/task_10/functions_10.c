@@ -62,7 +62,7 @@ int string_to_int(const char* str, int base)
 void int_to_string(int value, int base, char* result)
 {
     char buffer[65];
-    int i = 0;
+    int length = 0;
     
     int is_neg = value < 0;
     if (is_neg)
@@ -70,18 +70,17 @@ void int_to_string(int value, int base, char* result)
 
     do {
         int digit = value % base;
-        buffer[i++] = (digit < 10) ? '0' + digit : 'A' + digit - 10;
+        buffer[length++] = (digit < 10) ? '0' + digit : 'A' + digit - 10;
         value /= base;
     } while (value > 0);
 
     if (is_neg)
-        buffer[i++] = '-';
+        buffer[length++] = '-';
         
-    buffer[i] = '\0';
+    buffer[length] = '\0';
 
-    int length = i;
-    for (int j = 0; j < length; j++) {
-        result[j] = buffer[length - j - 1];
+    for (int i = 0; i < length; i++) {
+        result[i] = buffer[length - i - 1];
     }
 
     result[length] = '\0';
