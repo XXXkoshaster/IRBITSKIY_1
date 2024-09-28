@@ -21,7 +21,7 @@ void flag_q(char* a, char* b, char* c, char* eps)
             break;
         
         case 1:
-            printf("Root is %f\n", *roots);
+            printf("Root is %f\n", roots[0]);
             break;
         
         case 0:
@@ -40,9 +40,9 @@ void flag_m(char* a, char* b)
     long y = strtol(b, NULL, 10);
 
     if (is_multiple(x, y)) { 
-        printf("%s is multiple to %s", a, b);
+        printf("%s is multiple to %s\n", a, b);
     } else {
-        printf("%s is not multiple to %s", a, b);
+        printf("%s is not multiple to %s\n", a, b);
     }
 }
 

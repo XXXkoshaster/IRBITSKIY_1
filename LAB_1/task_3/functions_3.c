@@ -1,32 +1,27 @@
 #include "functions_3.h"
 
-int solve_quadratic(double a, double b, double c, double epsilon, double* roots)
-{
-    double discriminant = pow(b, 2) - (4 * a * c);
+int solve_quadratic(double a, double b, double c, double epsilon, double* roots) {
+    double discriminant = b * b - 4 * a * c;
 
     if (discriminant > epsilon) {
-        roots[0] = (-b + sqrt(discriminant)) / (2 * a);
-        roots[1] = (-b - sqrt(discriminant)) / (2 * a);
+        double sqrt_disc = sqrt(discriminant);
+        roots[0] = (-b + sqrt_disc) / (2 * a);
+        roots[1] = (-b - sqrt_disc) / (2 * a);
         return 2; 
     } else if (discriminant >= -epsilon) {
         roots[0] = -b / (2 * a);
         return 1; 
     } else {
-        
         return 0; 
     }
 }
 
 void permutations(char* a, char* b, char* c, double arr[PERMUTATIONS_COUNT][3]) 
 {    
-    double double_a = atof(a);
-    double double_b = atof(b);
-    double double_c = atof(c);
-
-    const double nums[3] = {double_a, double_b, double_c};
-    int ind = 0;
+    double nums[3] = {atof(a), atof(b), atof(c)};
     double comb[3];
-
+    int ind = 0;
+    
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             if (i == j) continue; 
@@ -35,6 +30,7 @@ void permutations(char* a, char* b, char* c, double arr[PERMUTATIONS_COUNT][3])
                 comb[0] = nums[i];
                 comb[1] = nums[j];
                 comb[2] = nums[k];
+
                 if (is_unique(arr, ind, comb)) { 
                     arr[ind][0] = nums[i];
                     arr[ind][1] = nums[j];
@@ -53,24 +49,16 @@ int is_unique(double arr[PERMUTATIONS_COUNT][3], int ind, double comb[3]) {
     return 1;
 }
 
-int is_multiple(int a, int b)
-{
-    if (a % b == 0) {
-        return 1;
-    } else {
-        return 0;
-    }
+int is_multiple(int a, int b) {
+    return (a % b == 0);
 }
 
-int is_triangle(double a, double b, double c, double eps)
-{
-    double a2 = pow(a, 2);
-    double b2 = pow(b, 2);
-    double c2 = pow(c, 2);
-    
-    if (abs(a2 + b2 - c2) <= eps || abs(a2 + c2 - b2) <= eps || abs(b2 + c2 - a2) <= eps) {
-        return 1;
-    } else {
-        return 0;
-    }
+#include <math.h>
+
+int is_triangle(double a, double b, double c, double eps) {
+    double a2 = a * a;
+    double b2 = b * b;
+    double c2 = c * c;
+
+    return (fabs(a2 + b2 - c2) <= eps || fabs(a2 + c2 - b2) <= eps || fabs(b2 + c2 - a2) <= eps);
 }
