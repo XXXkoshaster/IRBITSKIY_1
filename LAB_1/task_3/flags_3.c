@@ -1,6 +1,6 @@
 #include "functions_3.h"
 
-void flag_q(char* a, char* b, char* c, char* eps)
+void flag_q(char* eps, char* a, char* b, char* c)
 {
     double arr[PERMUTATIONS_COUNT][3];
     double epsilon = atof(eps);
@@ -17,10 +17,13 @@ void flag_q(char* a, char* b, char* c, char* eps)
         switch (ans)
         {
         case 2:
+            if (fabs(roots[0]) < epsilon) roots[0] = 0.0;
+            if (fabs(roots[1]) < epsilon) roots[1] = 0.0;
             printf("Roots: %f %f\n", roots[0], roots[1]);
             break;
         
         case 1:
+            if (fabs(roots[0]) < epsilon) roots[0] = 0.0;
             printf("Root is %f\n", roots[0]);
             break;
         
@@ -28,6 +31,10 @@ void flag_q(char* a, char* b, char* c, char* eps)
             printf("Roots are not real numbers.\n");
             break;
         
+        case -1:
+            printf("Infinite number of roots.\n");
+            break;
+
         default:
             break;
         }

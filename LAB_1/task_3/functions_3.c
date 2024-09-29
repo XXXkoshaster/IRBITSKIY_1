@@ -1,6 +1,15 @@
 #include "functions_3.h"
 
 int solve_quadratic(double a, double b, double c, double epsilon, double* roots) {
+    if (fabs(a) < epsilon) { 
+        if (fabs(b) < epsilon) {
+            return (fabs(c) < epsilon) ? -1 : 0;
+        } else {
+            roots[0] = -c / b;
+            return 1;
+        }
+    }
+
     double discriminant = b * b - 4 * a * c;
 
     if (discriminant > epsilon) {
