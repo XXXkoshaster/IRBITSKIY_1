@@ -23,9 +23,21 @@ void flag_a(char* x)
 }
 
 void flag_f(char* x)
-{
+{   
+    if (*x == '-') {
+        printf("Invalid x (x >= 0)\n");
+        return;
+    }
+
     long long_x = strtol(x, NULL, 10);
-    printf("Factarial is %ld", factorial(long_x));
+    
+    long result = factorial(long_x);
+    if (result == -1) {
+        printf("Memory overflow\n");
+        return;
+    } 
+    
+    printf("Result is %ld\n", result);
 }
 
 void flag_s(char *x)
@@ -37,6 +49,11 @@ void flag_s(char *x)
 void flag_e(char* x)
 {
     long long_x = strtol(x, NULL, 10);
+    if (long_x > 10) {
+        printf("Inalid x (x <= 10)\n");
+        return;
+    }
+
     print_table(long_x);
 }
 
