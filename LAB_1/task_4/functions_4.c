@@ -57,15 +57,24 @@ void convert_to_ascii(FILE* in_file, FILE* out_file)
 const char* generate_out_file(const char* in_file)
 {
     const char* prefix = "out_";
-    size_t out_file_len = strlen(prefix) + strlen(in_file) + 1;
+    const char* last_slash = strrchr(in_file, '/');
+    if (last_slash == NULL) {
+        last_slash = strrchr(in_file, '\\');
+    }
+
+    size_t dir_len = (last_slash == NULL) ? 0 : (last_slash - in_file + 1);
+    size_t out_file_len = dir_len + strlen(prefix) + strlen(in_file) - dir_len + 1;
     char* out_file = (char*)malloc(out_file_len);
     if (out_file == NULL) {
-        printf("Error of emiting memory\n");
+        printf("Error allocating memory\n");
         return NULL;
     }
 
-    strcpy(out_file, prefix);
-    strcat(out_file, in_file);
+    if (dir_len > 0) {
+        strncpy(out_file, in_file, dir_len);
+    }
+    strcpy(out_file + dir_len, prefix);
+    strcat(out_file + dir_len, in_file + dir_len);
 
     return out_file;
 }
