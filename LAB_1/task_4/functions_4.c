@@ -63,7 +63,8 @@ const char* generate_out_file(const char* in_file)
     }
 
     size_t dir_len = (last_slash == NULL) ? 0 : (last_slash - in_file + 1);
-    size_t out_file_len = dir_len + strlen(prefix) + strlen(in_file) - dir_len + 1;
+    size_t out_file_len = strlen(prefix) + strlen(in_file) + 1;
+    
     char* out_file = (char*)malloc(out_file_len);
     if (out_file == NULL) {
         printf("Error allocating memory\n");
