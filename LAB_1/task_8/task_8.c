@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
         fclose(in);
         return 1;
     }
-
+    
     process_files(in, out);
 
     fclose(in);
