@@ -96,6 +96,8 @@ void convert_to_hex(long x)
     char hex[100];
     int index = 0;
 
+    if (x < 0) x = -x;
+
     if (x == 0) {
         printf("0\n");
         return;
@@ -106,6 +108,6 @@ void convert_to_hex(long x)
         hex[index++] = hex_digits[remainder];
         x /= 16;
     }
-
+    
     print_hex(hex, index);
 }
