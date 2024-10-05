@@ -1,7 +1,4 @@
-//#include "functions_5.h"
-#include <math.h>   
-#include <stdio.h>  
-#include <stdlib.h> 
+#include "functions_5.h"
 
 double factorial(int n) 
 {
