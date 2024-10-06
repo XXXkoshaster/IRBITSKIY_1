@@ -62,17 +62,16 @@ double row_sqrt(double epsilon)
 
 double row_y(double epsilon)
 {
-    double sum = 0.0;
-    double term = 0.0;
+    double sum = -pow(M_PI, 2) / 6.0;
+    double term;
     int k = 2;
 
     do {
-        term = (1 / pow(sqrt(k), 2.0)) - (1 / k);
+        int sqrt_k = (int)sqrt(k);
+        term = (1.0 / pow(sqrt_k, 2.0)) - (1.0 / k);
         sum += term;
         k++;
-    } while (fabs(term) > epsilon);
+    } while (fabs(term) > epsilon);;
 
-    double res = -pow(row_pi(epsilon), 2.0) / 6.0 + sum;
-
-    return res;
+    return sum;
 }

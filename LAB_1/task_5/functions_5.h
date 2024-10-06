@@ -4,6 +4,7 @@
 #include <math.h>   
 #include <stdio.h>  
 #include <stdlib.h> 
+#include <limits.h>
 
 double factorial(int n);
 double first_expression(double x, double epsilon);

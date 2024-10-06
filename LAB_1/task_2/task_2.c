@@ -21,6 +21,8 @@ int main(int argc, char **argv) {
     printf("sqrt(2) with eqt: %f\n\n", eqt_sqrt(epsilon_double));
 
     printf("y with row: %f\n", row_y(epsilon_double));
-
+    printf("y with lims %f\n", limit_y(epsilon_double));
+    printf("y with eqt: %f\n", equation_y(epsilon_double));
+    
     return 0;
 }

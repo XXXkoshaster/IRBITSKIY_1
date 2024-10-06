@@ -2,15 +2,16 @@
 
 double factorial(int n) 
 {
-    double result = 1.0;
+    unsigned int long result = 1;
 
-    for (int i = 1; i <= n; i++) {
-        result *= i;
+    for (int i = 2; i <= n; i++) {
         
-        if (result == 0) {
+        if ((result > ULLONG_MAX / i)) {
             printf("Factorial overflow.\n");
             return 0;
         }
+
+        result *= i;    
     }
     
     return result;
@@ -58,45 +59,32 @@ double second_expression(double x, double epsilon)
 
 double third_expression(double x, double epsilon)
 {
-    double sum = 0.0;
-    double term = 0.0;
     int n = 0;
+    double sum = 0.0;
+    double term = 1.0;
 
-    do {
-        term = (powl(3, 3 * n) * powl(factorial(n), 3) * powl(x, 2 * n)) / (factorial(3 * n));
+    while(fabs(term) > epsilon)
+    {
         sum += term;
         n++;
-    } while (fabs(term) > epsilon);
-
+        term *= (9.0 * n * n * x * x) / (9.0 * n * n - 9.0 * n + 2.0);
+    }
+    
     return sum;
 }
 
 double fourth_expression(double x, double epsilon)
 {
+    int n = 0;
     double sum = 0.0;
-    double term = 0.0;
-    int n = 1;
-    int max_iterations = 100000; 
-
-    do {
-        unsigned long long numerator = double_factorial(2 * n - 1);
-        unsigned long long denominator = double_factorial(2 * n);
-
-        if (numerator == 0 || denominator == 0) {
-            printf("Factorial limit\n");
-            break;
-        }
-
-        term = powl(-1, n) * (double)numerator / denominator * powl(x, 2 * n);
+    double term = -1.0 * x * x / 2.0;
+    
+    while(fabs(term) > epsilon)
+    {
         sum += term;
         n++;
-
-        if (n > max_iterations) {
-            printf("Maximum iterations\n");
-            break;
-        }
-
-    } while (fabs(term) > epsilon);
+        term *= (-1.0 * x * x * (2.0 * n - 1)) / (2.0 * n);
+    }
 
     return sum;
 }

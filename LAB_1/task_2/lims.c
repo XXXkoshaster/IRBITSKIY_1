@@ -79,4 +79,18 @@ double lim_sqrt(double epsilon)
     return xn_next;
 }
 
+double limit_y(double epsilon)
+{
+    double previous = 0;
+    double current = 1;
+    int n = 1;
+    do
+    {
+        previous = current;
+        n *= 2;
+        current = sum(n) - log(n);
 
+    } while (fabs(previous - current) >= epsilon);
+
+    return current;
+}
