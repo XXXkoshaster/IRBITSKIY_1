@@ -1,6 +1,6 @@
 .vscode
 **/*.exe
-**/*.txt
+/build
 /task_9/task_9
 /task_7/task_7
 /task_10/task_10

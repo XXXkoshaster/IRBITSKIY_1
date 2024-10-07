@@ -62,7 +62,7 @@ void to_base_x(char* lexem, char* result, int x)
         int ascii = (int)(lexem[i]);
         char buffer[10];
         
-        itoa(ascii, buffer, x);
+        sprintf(buffer, "%d", ascii);
         
         for(int j = 0; buffer[j]; j++) {
             result[index++] = buffer[j];
