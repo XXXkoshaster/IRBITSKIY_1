@@ -6,7 +6,6 @@
 #include <stdlib.h> 
 #include <limits.h>
 
-double factorial(int n);
 double first_expression(double x, double epsilon);
 double second_expression(double x, double epsilon);
 double third_expression(double x, double epsilon);

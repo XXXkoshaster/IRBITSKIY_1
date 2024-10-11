@@ -1,90 +1,64 @@
 #include "functions_5.h"
 
-double factorial(int n) 
-{
-    unsigned int long result = 1;
-
-    for (int i = 2; i <= n; i++) {
-        
-        if ((result > ULLONG_MAX / i)) {
-            printf("Factorial overflow.\n");
-            return 0;
-        }
-
-        result *= i;    
-    }
-    
-    return result;
-}
-
-unsigned long long double_factorial(int n) {
-    unsigned long long result = 1;
-    
-    for (int i = n; i > 1; i -= 2) {
-        result *= i;
-    }
-
-    return result;
-}
-
 double first_expression(double x, double epsilon)
 {
-    double sum = 0.0;
-    double term = 0.0;
-    int n = 0;
+    double res = 0.0;
+    double term = 1.0;
+    int n = 1;
 
-    do {
-        term = powl(x, n) / factorial(n);
-        sum += term;
+    while(fabs(term) > epsilon)
+    {
+        res += term;
         n++;
-    } while (fabs(term) > epsilon);
+        term *= x / (x + 1);
+    }
 
-    return sum;
+    return res;
 }
 
 double second_expression(double x, double epsilon)
 {
-    double sum = 0.0;
-    double term = 0.0;
-    int n = 0;
+    double res = 0.0;
+    double term = 1.0;
+    int n = 1;
 
-    do {
-        term = (powl(-1, n) * powl(x, 2 * n)) / factorial(2 * n);
-        sum += term;
-        n++; 
-    } while (fabs(term) > epsilon);
-
-    return sum;
+    while(fabs(term) > epsilon)
+    {
+        res += term;
+        n++;
+        term *= (-1.0 * x * x) / (2.0 * n + 2.0);
+    }
+    return res;
 }
 
 double third_expression(double x, double epsilon)
 {
-    int n = 0;
-    double sum = 0.0;
+    int n = 1;
+    double res = 0.0;
     double term = 1.0;
 
     while(fabs(term) > epsilon)
     {
-        sum += term;
+        res += term;
         n++;
-        term *= (9.0 * n * n * x * x) / (9.0 * n * n - 9.0 * n + 2.0);
+        term *= (9.0 * (n + 1.0) * (n + 1.0) * x * x) / ((3.0 * n + 1) * (3.0 * n + 2));
     }
     
-    return sum;
+    return res;
 }
 
 double fourth_expression(double x, double epsilon)
 {
-    int n = 0;
-    double sum = 0.0;
+    int n = 2;
+    double res = 0.0;
     double term = -1.0 * x * x / 2.0;
     
     while(fabs(term) > epsilon)
     {
-        sum += term;
+        res += term;
         n++;
-        term *= (-1.0 * x * x * (2.0 * n - 1)) / (2.0 * n);
+        term *= (-1.0 * x * x * (2.0 * n + 1)) / (2.0 * (n + 1));
     }
 
-    return sum;
+    return res;
 }

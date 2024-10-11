@@ -7,70 +7,83 @@ char** read_lexemes(FILE* file, int* count)
     *count = 0;
 
     while (fscanf(file, "%255s", buffer) == 1) {
-        char** tmp  = (char**)realloc(lexemes, (*count + 1) * sizeof(char*));
+        if (!add_lexemes(&lexemes, count, buffer)) {
+            for (int i = 0; i < *count; i++) 
+                free(lexemes[i]);
 
-        if (tmp == NULL) {
-            for (int i = 0; i < *count; i++) free(lexemes[i]);
             free(lexemes);
             fclose(file);
             *count = 0;
             return NULL;
         }
-        lexemes = tmp;
-
-        lexemes[*count] = strdup(buffer);
-        if (lexemes[*count] == NULL) {
-            for (int i = 0; i < *count; i++) free(lexemes[i]);
-            free(lexemes);
-            fclose(file);
-            *count = 0;
-            return NULL;
-        }
-
-        (*count)++;
     }
 
     fclose(file);
     return lexemes;
 }
 
+int add_lexemes(char*** lexemes, int* count, char* buffer)
+{
+        char** tmp  = (char**)realloc(*lexemes, (*count + 1) * sizeof(char*));
+        if (tmp == NULL) 
+            return 0;
+        
+        *lexemes = tmp;
+
+        (*lexemes)[*count] = strdup(buffer);
+        if ((*lexemes)[*count] == NULL) 
+            return 0;
+
+        (*count)++;
+
+        return 1;
+}
+
 char** merge_lexemes(char** lexemes_1, int count_1, char** lexemes_2, int count_2, int* merged_count)
 {
+    if (lexemes_1 == NULL || lexemes_2 == NULL || merged_count == NULL || count_1 < 0 || count_2 < 0)
+        return NULL;
+
     int max_count = count_1 + count_2;
     char** merged = (char**)malloc(max_count * sizeof(char*));
 
-    if (merged == NULL) {
+    if (merged == NULL)
         return NULL;
-    }
+    
 
     *merged_count = 0;
 
     int i = 0, j = 0;
     while (i < count_1 || j < count_2) {
         if (i < count_1) {
-            merged[*merged_count] = strdup(lexemes_1[i++]);
-            
-            if (merged[*merged_count] == NULL) {
-                for (int k = 0; k < *merged_count; k++) free(merged[k]);
-                free(merged);
+            if (!copy_lexeme(merged, lexemes_1[i++], *merged_count)) 
                 return NULL;
-            }
+
             (*merged_count)++;
         }
 
         if (j < count_2) {
-            merged[*merged_count] = strdup(lexemes_2[j++]);
-
-            if (merged[*merged_count] == NULL) {
-                for (int k = 0; k < *merged_count; k++) free(merged[k]);
-                free(merged);
+            if (!copy_lexeme(merged, lexemes_2[j++], *merged_count)) 
                 return NULL;
-            }
+
             (*merged_count)++;
         }
     }
 
     return merged;
+}
+
+int copy_lexeme(char** merged, char* lexeme, int merged_count) {
+    merged[merged_count] = strdup(lexeme);
+
+    if (merged[merged_count] == NULL) {
+        for (int k = 0; k < merged_count; k++) {
+            free(merged[k]);
+        }
+        free(merged);
+        return 0; 
+    }
+    return 1; 
 }
 
 void write_lexemes_r(FILE* file, char** lexemes, int count)
@@ -152,3 +165,4 @@ void write_lexemes_a(FILE* file, char** lexemes, int count)
     
     fclose(file);
 }
+

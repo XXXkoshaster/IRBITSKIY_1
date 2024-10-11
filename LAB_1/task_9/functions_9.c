@@ -8,7 +8,12 @@ void fillArray(long *array, long size, long min, long max)
 }
 
 void first_task(char* a, char* b)
-{
+{   
+    if (!is_number(a) || !is_number(b)) {
+        printf("Args are not numbers\n");
+        return;
+    }
+
     long long_a = strtol(a, NULL, 10), long_b = strtol(b, NULL, 10);
     
     long size = long_b - long_a + 1;
@@ -24,7 +29,18 @@ void first_task(char* a, char* b)
     printf("Array after swapping min and max:\n");
     printf_array(array, size);
 
+    return;
+}
 
+int is_number(char* symbol)
+{
+    while(*symbol) {
+        if (!isdigit(*symbol))
+            return 0;
+
+        symbol++;
+    }
+    return 1;
 }
 
 void swap(long*a , long*b)
@@ -76,7 +92,7 @@ long find_close_number(long* array, long size, long origin)
     return close_number;
 }
 
-void second_task()
+int second_task()
 {   
     long size_a= get_random_number(10, 1000), size_b = get_random_number(10, 1000);
     long* arr_a = (long*)malloc(size_a * sizeof(long));
@@ -85,14 +101,14 @@ void second_task()
 
     if (arr_a == NULL || arr_b == NULL || arr_c == NULL) {
         printf("Memory allocation failed\n");
-        exit(1);
+        return 0;
     }
 
     fillArray(arr_a, size_a, -1000, 1000);
     fillArray(arr_b, size_b, -1000, 1000);
 
     for (long i = 0; i < size_a; i++) 
-        arr_c[i] = find_close_number(arr_b, size_b, arr_a[i]);
+        arr_c[i] = arr_a[i] + find_close_number(arr_b, size_b, arr_a[i]);
     
     printf("Arrray A:\n");
     printf_array(arr_a, size_a);
@@ -106,6 +122,8 @@ void second_task()
     free(arr_a);
     free(arr_b);
     free(arr_c);
+
+    return 1;
 }
 
 void printf_array(long* array, long size)

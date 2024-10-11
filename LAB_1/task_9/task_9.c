@@ -1,5 +1,8 @@
 #include "functions_9.h"
 
+#define ERROR_MEMORY_ALLOCATE 1
+#define ERROR_INCORRECT_SYMBOLS 2
+
 int main (int argc, char** argv)
 {
     srand(time(NULL));
@@ -10,7 +13,9 @@ int main (int argc, char** argv)
     }
 
     first_task(argv[1], argv[2]);
-    second_task();
+
+    if (!second_task())
+        return ERROR_MEMORY_ALLOCATE;
     
     return 0;
 }
