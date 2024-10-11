@@ -62,6 +62,29 @@ double row_sqrt(double epsilon)
 
 double row_y(double epsilon)
 {
+    double previous = 0;
+    double current = 0.5;
+    int k = 2;
+    double l = 0;
+
+    do {
+        previous = current;
+        k++;
+        l = sqrt(k);
+        if (fmod(l,1.0) == 0)
+        {
+            k++;
+            l = (int)pow(k, 1.0/2.0);
+        }
+        current += 1.0/pow((int)l,2.0) - 1.0/k;
+    } while (fabs(previous - current) >= epsilon);
+
+    return (current - pow(M_PI,2) / 6);
+}
+
+/*
+double row_y(double epsilon)
+{
     double sum = -pow(M_PI, 2) / 6.0;
     double term;
     int k = 2;
@@ -75,3 +98,4 @@ double row_y(double epsilon)
 
     return sum;
 }
+*/

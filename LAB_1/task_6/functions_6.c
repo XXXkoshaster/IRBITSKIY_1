@@ -29,33 +29,38 @@ double expression_d(double x)
     return pow(x, x);
 }
 
-double trapezoidal(double (*f)(double), double a, double b, int n)
+double trapezoidal_method(double (*f)(double), double a, double b, int n)
 {
-    double result = 0.0;
-    double delta_x = (b - a) / n;
+    double h = (b - a) / n;
+    double sum = 0.0;
+    
+    sum += f(a) + f(b);
 
-    for (int i = 0; i < n; i++)
+    for (int i = 1; i < n; i++)
     {
-        double first_value = f(a + i * delta_x);
-        double second_value = f(a + (i + 1) * delta_x);
-        result += (first_value + second_value) / 2.0 * delta_x;
+        sum += 2 * f(a + i * h);
     }
 
-    return result;
+    return (h / 2) * sum;
 }
 
 double integral(double epsilon, double (*f)(double), double a, double b)
 {
-    int n = 1;
-    double result = trapezoidal(f, a, b, n);
-    double prev_result = result;
+    int n = 1000;
+    double previous_result = 0.0;
+    int max_iterations = 1000000;
+    double result = trapezoidal_method(f, a, b, n);
 
-    do
+    while (fabs(result - previous_result) > epsilon)
     {
+        previous_result = result;
         n *= 2;
-        prev_result = result;
-        result = trapezoidal(f, a, b, n);
-    } while (fabs(result - prev_result) > epsilon);
-
+        result = trapezoidal_method(f, a, b, n);
+    }
+    
+    if (n >= max_iterations)
+    {
+        printf("Max count interatins\n");
+    }
     return result;
 }

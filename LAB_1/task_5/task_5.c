@@ -7,6 +7,11 @@ int main(int argc, char **argv) {
     double epsilon_double = atof(epsilon);
     double x_double = atof(x);
     
+    if (x_double >= 1.0 || x_double <= -1.0) {
+        printf("-1 < x < 1\n");
+        return 1;
+    }
+
     printf("First expression: %f\n", first_expression(x_double, epsilon_double));
     printf("Second expression: %f\n", second_expression(x_double, epsilon_double));
     printf("Third expression: %f\n", third_expression(x_double, epsilon_double));

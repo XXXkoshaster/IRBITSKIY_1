@@ -10,7 +10,7 @@ double expression_b(double x);
 double expression_c(double x);
 double expression_d(double x);
 
-double trapezoidal(double (*f)(double), double a, double b, int n);
+double trapezoidal_method(double (*f)(double), double a, double b, int n);
 double integral(double epsilon, double (*f)(double), double a, double b);
 
 #endif

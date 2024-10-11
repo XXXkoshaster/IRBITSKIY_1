@@ -30,6 +30,14 @@ void flag_r(const char* file_1, const char* file_2, const char* out_file)
 
     write_lexemes_r(out, merged_lexemes, merged_count);
 
+    for (int i = 0; i < count_1; i++) {
+        free(lexemes1[i]);
+    }
+
+    for (int i = 0; i < count_2; i++) {
+        free(lexemes2[i]);
+    }
+
     free(lexemes1);
     free(lexemes2);
 }
@@ -53,7 +61,7 @@ void flag_a(const char* file, const char* out_file)
     }
 
     write_lexemes_a(out, lexemes, count);
-
+    
     free(lexemes);
 }
 

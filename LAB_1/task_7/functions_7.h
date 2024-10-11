@@ -11,7 +11,8 @@ char** merge_lexemes(char** lexemes_1, int count_1, char** lexemes_2, int count_
 void write_lexemes_r(FILE* filename, char** lexemes, int count);
 
 void to_lower(char* lexem);
-void to_base_x(char* lexem, char* result, int x);
+void to_base_4(char* lexem, char* result);
+void to_base_8(char* lexem, char* result);
 void write_lexemes_a(FILE* file, char** lexemes, int count);
 
 #endif
