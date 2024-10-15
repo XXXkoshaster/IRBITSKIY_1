@@ -14,7 +14,7 @@ void find_min_and_max(long* array, long size);
 void printf_array(long* array, long size);
 
 int second_task();
-long find_close_number(long* array, long size, long origin);
+long bin_search(long origin, long* arr, long size);
 long get_random_number(long a, long b);
 
 #endif

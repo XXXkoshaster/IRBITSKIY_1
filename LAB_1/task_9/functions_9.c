@@ -80,16 +80,41 @@ long get_random_number(long a, long b)
     return rand() % (b - a + 1) + a;
 }
 
-long find_close_number(long* array, long size, long origin)
+long bin_search(long origin, long* arr, long size)
 {
-    long close_number = array[0];
+    int low, high, mid;
+    low = 0;
+    high = size - 1;
 
-    for (long i = 1; i < size; i++) {
-        if (labs(array[i] - origin) < labs(close_number - origin))
-            close_number = array[i];
+    while (low <= high)
+    {
+        mid = labs(low + high) / 2;
+        if (origin < arr[mid])
+            high = mid - 1;
+        else if (origin > arr[mid])
+            low = mid + 1;
+        else 
+            return arr[mid];
     }
 
-    return close_number;
+    if (high < 0)
+        return arr[low];
+    else if (low >= size)
+        return arr[high];
+    else
+    {
+        if (abs(arr[low] - origin) < abs(arr[high] - origin))
+            return arr[low];
+        else
+            return arr[high];
+    }
+}
+
+
+
+int int_comparator(const void *a, const void *b)
+{
+    return (*(int *)a - *(int *)b);
 }
 
 int second_task()
@@ -107,14 +132,16 @@ int second_task()
     fillArray(arr_a, size_a, -1000, 1000);
     fillArray(arr_b, size_b, -1000, 1000);
 
-    for (long i = 0; i < size_a; i++) 
-        arr_c[i] = arr_a[i] + find_close_number(arr_b, size_b, arr_a[i]);
-    
     printf("Arrray A:\n");
     printf_array(arr_a, size_a);
 
     printf("Arrray B:\n");
     printf_array(arr_b, size_b);
+
+    qsort(arr_b, size_b, sizeof(long), int_comparator);
+
+    for (long i = 0; i < size_a; i++) 
+        arr_c[i] = arr_a[i] + bin_search(arr_a[i], arr_b, size_b);
     
     printf("Arrray C:\n");
     printf_array(arr_c, size_a);

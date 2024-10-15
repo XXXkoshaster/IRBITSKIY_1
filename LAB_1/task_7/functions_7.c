@@ -1,9 +1,11 @@
 #include "functions_7.h"
 
+#define BUFFER_SIZE 256
+
 char** read_lexemes(FILE* file, int* count)
 {
     char** lexemes = NULL;
-    char buffer[256];
+    char buffer[BUFFER_SIZE];
     *count = 0;
 
     while (fscanf(file, "%255s", buffer) == 1) {
@@ -110,21 +112,34 @@ void to_lower(char* lexem)
 void to_base_4(char* lexem, char* result)
 {
     int index = 0;
-    for(int i = 0; lexem[i]; i++) {
+    for (int i = 0; lexem[i];i++) {
         int ascii = (int)(lexem[i]);
-        char buffer[10];
-        
-        sprintf(buffer, "%04o", ascii);
-        
-        for(int j = 0; buffer[j]; j++) {
-            result[index++] = buffer[j];
-        }
-    }
-    
-    result[index] = '\0';
-}
+        char buffer[256] = {0};
 
-void to_base_8(char* lexem, char* result)
+        int buffer_index = 255;
+        buffer[buffer_index--] = '\0';
+        
+        if (ascii == 0) {
+            buffer[buffer_index--] = '0';
+        } else {
+            while (ascii > 0) {
+                buffer[buffer_index--] = '0' + (ascii % 4);
+                ascii /= 4;
+            }
+        }
+
+        do {
+            buffer_index++;
+        } while (buffer[buffer_index] == '0');
+        
+        for (int j = buffer_index; buffer[j]; j++) 
+            result[index++] = buffer[j];
+    }
+    result[index] = '\0';
+}       
+
+
+void to_base_8(char* lexem, char* result, size_t result_size)
 {
     int index = 0;
     for(int i = 0; lexem[i]; i++) {
@@ -134,11 +149,35 @@ void to_base_8(char* lexem, char* result)
         sprintf(buffer, "%03o", ascii);
         
         for(int j = 0; buffer[j]; j++) {
-            result[index++] = buffer[j];
+            if (index < result_size) {
+                result[index++] = buffer[j];
+            } else {
+                result[index] = '\0';
+                return;
+            }  
         }
     }
-    
+
     result[index] = '\0';
+}
+
+void get_file_name(char* file_path, char* name)
+{
+    char* last_slash = strrchr(file_path, '/');
+    if (last_slash == NULL) last_slash = strrchr(file_path, '\\');
+    if (last_slash == NULL) last_slash = file_path - 1;
+    
+    char* last_point = strrchr(file_path, '.');
+    if (last_point == NULL) last_point = file_path + strlen(file_path);
+
+    char* point = last_slash + 1;
+    int i = 0;
+
+    while (point != last_point) {
+        name[i++] = *point++;
+    }
+    
+    name[i] = '\0';
 }
 
 void write_lexemes_a(FILE* file, char** lexemes, int count)
@@ -152,7 +191,7 @@ void write_lexemes_a(FILE* file, char** lexemes, int count)
             to_lower(lexemes[i]);
             strcpy(buffer, lexemes[i]);
         } else if ((i + 1) % 5 == 0) {
-            to_base_8(lexemes[i], buffer);
+            to_base_8(lexemes[i], buffer, sizeof(buffer));
         } else {
             strcpy(buffer, lexemes[i]);
         }

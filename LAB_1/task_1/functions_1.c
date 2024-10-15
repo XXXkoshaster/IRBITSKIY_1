@@ -65,7 +65,7 @@ int is_multiple(char* x)
 }
 
 void print_hex(char* hex_x, int length)
-{
+{   
     for (int i = length - 1; i >= 0; i--){
         printf("%c ", hex_x[i]);
     }

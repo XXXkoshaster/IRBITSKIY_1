@@ -6,13 +6,13 @@ void flag_r(const char* file_1, const char* file_2, const char* out_file)
    
     FILE* in_1 = fopen(file_1, "r");
     if (!in_1) {
-        printf("Error opening file");
+        printf("Error opening file\n");
         return;
     }
 
     FILE* in_2 = fopen(file_2, "r");
     if (!in_2) {
-        printf("Error opening file");
+        printf("Error opening file\n");
         return;
     }
 
@@ -24,7 +24,7 @@ void flag_r(const char* file_1, const char* file_2, const char* out_file)
     
     FILE* out = fopen(out_file, "w");
     if (!out) {
-        printf("Error opening file");
+        printf("Error opening file\n");
         return;
     }
 
@@ -48,7 +48,7 @@ void flag_a(const char* file, const char* out_file)
     
     FILE* in = fopen(file, "r");
     if (!in) {
-        printf("Error opening file");
+        printf("Error opening file\n");
         return;
     }
 
@@ -56,7 +56,7 @@ void flag_a(const char* file, const char* out_file)
 
     FILE* out = fopen(out_file, "w");
     if (!out) {
-        printf("Error opening file");
+        printf("Error opening file\n");
         return;
     }
 

@@ -36,7 +36,6 @@ double lim_pi(double epsilon)
         n++;
         prev = term;
         term = (pow(pow(2.0, n) * factorial(n), 4.0)) / (n * (pow(factorial(2.0 * n), 2.0)));        
-
     } while (fabs(term - prev) > epsilon);
 
     return prev;
@@ -84,12 +83,12 @@ double limit_y(double epsilon)
     double previous = 0;
     double current = 1;
     int n = 1;
+    
     do
     {
         previous = current;
         n *= 2;
         current = sum(n) - log(n);
-
     } while (fabs(previous - current) >= epsilon);
 
     return current;

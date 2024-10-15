@@ -7,6 +7,7 @@ void flag_h(char* x)
 
 void flag_p(char* x)
 { 
+    
     long long_x = strtol(x, NULL, 10);
     
     if (long_x == 1 || long_x == 0)
@@ -18,7 +19,12 @@ void flag_p(char* x)
 }
 
 void flag_a(char* x)
-{
+{   
+    if (*x == '-') {
+        printf("Invalid x (x >= 0)\n");
+        return;
+    }
+
     printf("Sum is %d\n", sum(x));
 }
 
@@ -48,6 +54,11 @@ void flag_s(char *x)
 
 void flag_e(char* x)
 {
+    if (*x == '-') {
+        printf("Invalid x (x >= 0)\n");
+        return;
+    }
+    
     long long_x = strtol(x, NULL, 10);
     if (long_x > 10) {
         printf("Inalid x (x <= 10)\n");

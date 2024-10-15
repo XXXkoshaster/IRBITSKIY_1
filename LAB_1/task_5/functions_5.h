@@ -6,9 +6,9 @@
 #include <stdlib.h> 
 #include <limits.h>
 
-double first_expression(double x, double epsilon);
-double second_expression(double x, double epsilon);
-double third_expression(double x, double epsilon);
-double fourth_expression(double x, double epsilon);
+void first_expression(double x, double epsilon);
+void second_expression(double x, double epsilon);
+void third_expression(double x, double epsilon);
+void fourth_expression(double x, double epsilon);
 
 #endif

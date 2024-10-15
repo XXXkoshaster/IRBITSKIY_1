@@ -73,14 +73,11 @@ double equation_y(double epsilon)
     do
     {
         previous = current;
-        do
-        {
+        do {
             p++;
         } while (is_prime(p));
         product *= (p - 1.0)/p;
         current = log(p) * product;
-
-
     } while (fabs(previous - current) >= epsilon);
     return (-log(current));
 }

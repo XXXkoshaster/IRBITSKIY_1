@@ -17,32 +17,33 @@ double row_exp(double epsilon)
 
 double row_pi(double epsilon)
 {
-    double sum = 0.0;
-    double term = 0.0;
     int n = 1;
-
-    do {
-        term = pow(-1.0, (n - 1)) / factorial(2 * n - 1);
-        sum += term;
+    double current = 1.0, previous = 0;
+    do
+    {
+        previous = current;
         n++;
-    } while (fabs(term) > epsilon);
-
-    return (4 * sum);
+        current -= 1.0/(2.0 * n - 1.0);
+        n++;
+        current += 1.0/(2.0 * n - 1.0);
+    } while (fabs(previous - current) >= epsilon);
+    return current * 4;
 }
+
 
 double row_ln(double epsilon)
 {
-    double sum = 0.0;
-    double term = 0.0;
     int n = 1;
-
-    do {
-        term = pow(-1.0, (n - 1)) / factorial(n);
-        sum += term;
+    double current = 1.0, previous = 0;
+    do
+    {
+        previous = current;
         n++;
-    } while (fabs(term) > epsilon);
-
-    return sum;
+        current -= 1.0/n;
+        n++;
+        current += 1.0/n;
+    } while (fabs(previous - current) >= epsilon);
+    return current;
 }
 
 double row_sqrt(double epsilon)

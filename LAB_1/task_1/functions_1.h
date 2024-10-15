@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <limits.h>
+#include <ctype.h>
 
 void print_hex(char* hex_x, int length);
 long long int_pow(int base, int exp);
