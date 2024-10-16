@@ -1,16 +1,26 @@
 #include "functions_5.h"
 
+double factorial(int n)
+{
+    double result = 1.0;
+    for (int i = 1; i <= n; i++)
+    {
+        result *= i;
+    }
+    return result;
+}
+
 void first_expression(double x, double epsilon)
 {
     double res = 0.0;
     double term = 1.0;
-    int n = 0;
+    int n = 1;
 
     while(fabs(term) > epsilon)
     {
         res += term;
-        n++;
         term *= x / n;
+        ++n;
     }
 
     printf("First expression: %lf\n", res); 
@@ -21,13 +31,13 @@ void second_expression(double x, double epsilon)
 {
     double res = 0.0;
     double term = 1.0;
-    int n = 1;
+    int n = 0;
 
     while(fabs(term) > epsilon)
     {
         res += term;
-        n++;
-        term *= (-1.0 * x * x) / (2.0 * n * (2.0 * n - 1.0));
+        term *= -(x * x) / ((2 * n + 1) * (2 * n + 2)); //-0.41614....
+        ++n;
     }
 
     printf("Second expression: %lf\n", res); 

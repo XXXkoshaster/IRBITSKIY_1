@@ -16,6 +16,10 @@ int main(int argc, char* argv[])
             printf("Error: input and output files must be different\n");
             return ERROR_SAME_FILE;
         }
+
+        free(in_file_1_name);
+        free(out_file_name);
+        
     } else if (argc == 5) {
         in_file_1_name = (char*)malloc(sizeof(char) * strlen(argv[2]));
         in_file_2_name = (char*)malloc(sizeof(char) * strlen(argv[3]));
@@ -28,6 +32,10 @@ int main(int argc, char* argv[])
             printf("Error: input and output files must be different\n");
             return ERROR_SAME_FILE;
         }
+
+        free(in_file_1_name);
+        free(in_file_2_name);
+        free(out_file_name);
     }
 
     execute_flag(argc, argv);
