@@ -32,8 +32,15 @@ void flag_u(char* str)
 
 void flag_n(char* str)
 {   
+    printf("Original string:\t%s\n", str);
+    
     size_t length_str = length_string(str);
     char* result = (char*)malloc((length_string(str) + 1) * sizeof(char));
+
+    if (!result) {
+        return;
+    }
+
     result[0] = '\0';
     
     n_string(str, result, length_str);
@@ -46,9 +53,14 @@ void flag_n(char* str)
 void flag_c(char** strings, int argc)
 {       
     char* result = (char*)malloc(1 * sizeof(char));
-    result[0] = '\0';  
-
-    c_string(result, strings, argc);
+    
+    if (!result) {
+        return;
+    }
+    
+    result[0] = '\0';
+    
+    c_string(&result, strings, argc);
     printf("Concatenated string:\t%s\n", result);
     
     free(result);

@@ -48,7 +48,6 @@ void u_string(char* origin_str, char* new_str)
 void n_string(char* origin_str, char* new_str, size_t len_str)
 {   
     unsigned int count_letters = 0, count_nums = 0, count_other_symb = 0;
-    char* tmp;
 
     char* letters = (char*)malloc((len_str + 1) * sizeof(char));
     char* numbers = (char*)malloc((len_str + 1) * sizeof(char));
@@ -65,11 +64,11 @@ void n_string(char* origin_str, char* new_str, size_t len_str)
     letters[0] = '\0';
     other_symbols[0] = '\0';
     
-    while(*(origin_str)) {
-        if (isalpha(*origin_str)) {
-            letters[count_letters++] = *origin_str;
-        } else if (isdigit(*origin_str)) {
+    while(*origin_str) {
+        if (isdigit(*origin_str)) {
             numbers[count_nums++] = *origin_str;
+        } else if (isalpha(*origin_str)) {
+            letters[count_letters++] = *origin_str;
         } else {
             other_symbols[count_other_symb++] = *origin_str;
         }
@@ -81,40 +80,88 @@ void n_string(char* origin_str, char* new_str, size_t len_str)
     letters[count_letters] = '\0';
     other_symbols[count_other_symb] = '\0';
 
-    concatenate_strings(new_str, letters, numbers);
-    concatenate_strings(new_str + count_letters + count_nums, new_str, other_symbols);
-
-    new_str[count_letters + count_nums + count_other_symb] = '\0';
+    concatenate_strings(new_str, numbers);
+    concatenate_strings(new_str, letters);
+    concatenate_strings(new_str, other_symbols);
     
     free(letters);
     free(numbers);
     free(other_symbols);
 }
 
-void c_string(char* new_string, char** argv, int argc)
+void c_string(char** new_string, char** argv, int argc)
 {
-    int index = 0;
-    unsigned int count_strings = strtol(argv[3], NULL, 10);
+    unsigned int count_strings = get_count_strings(argv);
 
-    char** lexemes = (char**)malloc(count_strings * sizeof(char*));
+    if (count_strings != argc - 3) {
+        printf("Invalid count of strings\n");
+        return;
+    }
+
+    char** lexemes = allocate_lexemes(count_strings);
+
+    if (!lexemes) {
+        return;
+    }
+
     create_lexemes(argv, lexemes, argc);
 
-    unsigned int seed = strtol(argv[3], NULL, 10);
+    initialize_random(count_strings);
+
+    concatenate_random_strings(new_string, lexemes, count_strings);
+    free_lexemes(lexemes, count_strings);
+}
+
+unsigned int get_count_strings(char** argv) {
+    return strtol(argv[3], NULL, 10);
+}
+
+char** allocate_lexemes(unsigned int count_strings) {
+    char** lexemes = (char**)malloc(count_strings * sizeof(char*));
+    if (!lexemes) {
+        return NULL;
+    }
+    return lexemes;
+}
+
+void initialize_random(unsigned int seed) {
     srand(seed);
+}
 
+void concatenate_random_strings(char** new_string, char** lexemes, unsigned int count_strings) {
+    int indexes[count_strings];
     for (int i = 0; i < count_strings; i++) {
-        index = rand() % count_strings;
-        char* tmp = (char*)realloc(new_string, length_string(new_string) + length_string(lexemes[index] + 1));
+        indexes[i] = i;
+    }
+    
+    for (unsigned int i = 0; i < count_strings; i++)
+    {
+        int j = rand() % count_strings;
+        int tmp = indexes[i];
+        indexes[i] = indexes[j];
+        indexes[j] = tmp;
+    }
 
+    for (unsigned int i = 0; i < count_strings; i++) {
+        int index = indexes[i];
+        size_t new_length = length_string(lexemes[index]) + length_string(*new_string) + 1;
+
+        char* tmp = (char*)realloc(*new_string, new_length * sizeof(char));
         if (!tmp) {
-            free(tmp);
+            free(*new_string);
+            free_lexemes(lexemes, count_strings);
             return;
         }
 
-        new_string = tmp;
-        concatenate_strings(new_string, new_string, lexemes[index]);
+        *new_string = tmp;
+        concatenate_strings(*new_string, lexemes[index]);
     }
+}
 
+void free_lexemes(char** lexemes, unsigned int count_strings) {
+    for (int i = 0; i < count_strings; i++) {
+        free(lexemes[i]);
+    }
     free(lexemes);
 }
 
@@ -124,24 +171,50 @@ void create_lexemes(char** argv, char** lexemes, int argc)
 
     for (int i = 2; i < argc; i++) {
         if (i == 3) continue;
-        lexemes[j] = argv[i];
+        lexemes[j] = strdup(argv[i]);
         j++;
     }
 }
 
-void concatenate_strings(char* result, char* f_string, char* s_string)
+char* concatenate_strings(char* dest, const char* src)
 {
-    while(*f_string) {
-        *result = *f_string;
-        f_string++;
-        result++;
+    if (dest == NULL || src == NULL) {
+        return NULL;
     }
 
-    while(*s_string) {
-        *result = *s_string;
-        s_string++;
-        result++;
+    char* dest_start = dest;
+
+    while(*dest)
+        dest++;
+
+    while(*src) {
+        *dest = *src;
+        dest++;
+        src++;
     }
 
-    *result = '\0';
+    *dest = '\0';
+
+    return dest_start;
+}
+
+char* strdup(char* str)
+{
+    if (!str)
+        return NULL;
+
+    size_t len = length_string(str);
+
+    char* copy_of_str = (char*)malloc((len + 1) * sizeof(char));
+
+    if (!copy_of_str)
+        return NULL;
+
+    for(size_t i = 0; i < len; i++) {
+        copy_of_str[i] = str[i];
+    }
+
+    copy_of_str[len] = '\0';
+
+    return copy_of_str;
 }
