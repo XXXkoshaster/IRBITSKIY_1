@@ -28,17 +28,15 @@ double lim_exp(double epsilon)
 
 double lim_pi(double epsilon)
 {
-    int n = 1;
-    double prev;
-    double term = (pow(pow(2.0, n) * factorial(n), 4.0)) / (n * (pow(factorial(2.0 * n), 2.0)));
-
-    do {
+    int n = 2;
+    double current = 4.0, previous = 0;
+    do
+    {
+        previous = current;
+        current *= (4.0 * n * ( n - 1.0)) / pow(2.0 * n - 1.0, 2);
         n++;
-        prev = term;
-        term = (pow(pow(2.0, n) * factorial(n), 4.0)) / (n * (pow(factorial(2.0 * n), 2.0)));        
-    } while (fabs(term - prev) > epsilon);
-
-    return prev;
+    } while (fabs(previous - current) >= epsilon);
+    return current;
 }
 
 double lim_ln(double epsilon)

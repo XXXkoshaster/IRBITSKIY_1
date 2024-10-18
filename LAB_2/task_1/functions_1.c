@@ -91,12 +91,7 @@ void n_string(char* origin_str, char* new_str, size_t len_str)
 
 void c_string(char** new_string, char** argv, int argc)
 {
-    unsigned int count_strings = get_count_strings(argv);
-
-    if (count_strings != argc - 3) {
-        printf("Invalid count of strings\n");
-        return;
-    }
+    unsigned int count_strings = argc - 3;
 
     char** lexemes = allocate_lexemes(count_strings);
 
@@ -106,14 +101,10 @@ void c_string(char** new_string, char** argv, int argc)
 
     create_lexemes(argv, lexemes, argc);
 
-    initialize_random(count_strings);
+    initialize_random(argv[3]);
 
     concatenate_random_strings(new_string, lexemes, count_strings);
     free_lexemes(lexemes, count_strings);
-}
-
-unsigned int get_count_strings(char** argv) {
-    return strtol(argv[3], NULL, 10);
 }
 
 char** allocate_lexemes(unsigned int count_strings) {
@@ -124,7 +115,8 @@ char** allocate_lexemes(unsigned int count_strings) {
     return lexemes;
 }
 
-void initialize_random(unsigned int seed) {
+void initialize_random(char* value) {
+    unsigned int seed = strtol(value, NULL, 10);
     srand(seed);
 }
 
@@ -171,7 +163,7 @@ void create_lexemes(char** argv, char** lexemes, int argc)
 
     for (int i = 2; i < argc; i++) {
         if (i == 3) continue;
-        lexemes[j] = strdup(argv[i]);
+        lexemes[j] = my_strdup(argv[i]);
         j++;
     }
 }
@@ -198,7 +190,7 @@ char* concatenate_strings(char* dest, const char* src)
     return dest_start;
 }
 
-char* strdup(char* str)
+char* my_strdup(char* str)
 {
     if (!str)
         return NULL;
