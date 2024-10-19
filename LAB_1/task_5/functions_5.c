@@ -83,9 +83,9 @@ void fourth_expression(double x, double epsilon)
     {
         res += term;
         n++;
-        term *= ((-1.0 * x * x * (2.0 * n - 1.0)) / (2.0 * n));
+        term *= -((2 * n + 1) * x * x) / (2 * n + 2);;
     }
-
+    
     printf("Forth expression: %lf\n", res);
     return;
 }
