@@ -9,17 +9,22 @@ enum errors geom_average(double *result, int count, ...)
 
     va_list args;
     va_start(args, count);
+    
+    double* number;
 
     for (int i = 0; i < count; i++)
     {
-        double number = va_arg(args, double);
+        number = va_arg(args, double*);
+            
+        if (number == NULL)
+            return NULL_PTR;
 
-        if (check_overflow(&number)) {
+        if (check_overflow(number)) {
             va_end(args);
             return MY_OVERFLOW;
         }
 
-        *result *= number;
+        *result *= *number;
     }
 
     *result = pow(*result, 1.0 / count);

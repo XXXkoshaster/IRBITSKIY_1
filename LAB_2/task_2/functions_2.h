@@ -11,6 +11,7 @@ enum errors{
     INVALID_INPUT,
     WRONG_PARAMETERS,
     MY_OVERFLOW,
+    NULL_PTR, 
     INVALID_MEMORY
 };
 

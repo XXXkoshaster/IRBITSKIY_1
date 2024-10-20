@@ -6,3 +6,4 @@ set(CMAKE_C_STANDARD 99)
 
 add_subdirectory(task_1)
 add_subdirectory(task_2)
+add_subdirectory(task_3)
