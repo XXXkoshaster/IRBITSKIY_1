@@ -26,6 +26,9 @@ typedef struct {
 enum ERRORS find_substring_in_file(FILE* input_file, const char* substring, MATCH* matches);
 enum ERRORS get_matches(const char* substring, int count_files, ...);
 
+enum ERRORS validate_input(const char* substring, int count_files);
+enum ERRORS process_file(char* file_name, const char* substring);
+void print_matches(char* file_name, MATCH* matches, int max_count_matches);
 char* my_strstr(const char* src, const char* origin);
 int count_lines(FILE* file);
 

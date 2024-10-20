@@ -30,15 +30,15 @@ enum ERRORS find_substring_in_file(FILE* input_file, const char* substring, MATC
 
 enum ERRORS get_matches(const char* substring, int count_files, ...)
 {
-    if (substring == NULL || count_files < 1)  
-        return INVALID_INPUT;
+    enum ERRORS error = validate_input(substring, count_files);
+    
+    if (error != DONE)
+        return error;
 
-    int i;
     va_list files;
-
     va_start(files, count_files);
 
-    for (i = 0; i < count_files; i++) {
+    for (int i = 0; i < count_files; i++) {
         char* file_name = va_arg(files, char*);
 
         if (file_name == NULL) {
@@ -46,46 +46,15 @@ enum ERRORS get_matches(const char* substring, int count_files, ...)
             return WRONG_PARAMETERS;
         }
 
-        FILE* file = fopen(file_name, "r");
+        error = process_file(file_name, substring);
 
-        if (file == NULL) {
+        if (error != DONE) {
             va_end(files);
-            return FILE_NOT_FOUND;
+            return error;
         }
-
-        int max_matches = count_lines(file);
-
-        if (max_matches == -1) {
-            fclose(file);
-            va_end(files);
-            return INVALID_INPUT;
-        }
-
-        MATCH* matches = (MATCH*)malloc(max_matches * sizeof(MATCH));
-
-        if (matches == NULL) {
-            va_end(files);
-            return NULL_PTR;
-        }
-
-        if (find_substring_in_file(file, substring, matches) == NULL_PTR) {
-            free(matches);
-            va_end(files);
-            return INVALID_MEMORY;
-        }
-
-        if (matches[0].line_number != 0) {
-            printf("File %s:\n", file_name);
-
-            for (int j = 0; j < max_matches; j++) {
-                if (matches[j].line_number != 0)
-                    printf("\tline: %d, position: %d\n", matches[j].line_number, matches[j].position);
-            }
-        }
-
-        free(matches);
-        fclose(file);   
     }
 
+    va_end(files);
+    
     return DONE;
 }
