@@ -5,26 +5,32 @@ enum errors geom_average(double *result, int count, ...)
     if (count < 1)
         return INVALID_INPUT;
 
+    if (result == NULL)
+        return NULL_PTR;
+
     *result = 1;
 
     va_list args;
     va_start(args, count);
     
-    double* number;
+    double number;
 
     for (int i = 0; i < count; i++)
-    {
-        number = va_arg(args, double*);
-            
-        if (number == NULL)
-            return NULL_PTR;
+    {   
+        number = va_arg(args, double);
+        
+        if (isnan(number) || isinf(number))
+        {
+            va_end(args);
+            return INVALID_INPUT;
+        }
 
-        if (check_overflow(number)) {
+        if (check_overflow(&number)) {
             va_end(args);
             return MY_OVERFLOW;
         }
 
-        *result *= *number;
+        *result *= number;
     }
 
     *result = pow(*result, 1.0 / count);

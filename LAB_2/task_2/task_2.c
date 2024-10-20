@@ -2,7 +2,6 @@
 
 int main(int argc, char** argv)
 {
-
     double result_average;
     enum errors error_status = geom_average(&result_average, 3, 2.0, 4.0, 8.0);
 
@@ -12,10 +11,8 @@ int main(int argc, char** argv)
         printf("Error: %d\n", error_status);
 
     double result_pow;
-    double base = atof(argv[1]);
-    int power = atoi(argv[2]);
 
-    error_status = fast_pow(&result_pow, base, power);
+    error_status = fast_pow(&result_pow, 4, 6);
 
     if (error_status == DONE)
         printf("Fast power: %lf\n", result_pow);
