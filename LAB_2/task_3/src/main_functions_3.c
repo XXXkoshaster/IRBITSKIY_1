@@ -1,25 +1,48 @@
 #include "../include/functions_2_3.h"
 
-enum ERRORS find_substring_in_file(FILE* input_file, const char* substring, MATCH* matches)
+enum ERRORS find_substring_in_file(FILE* input_file, const char* substring, MATCH** matches, int* max_matches)
 {
     if (input_file == NULL || substring == NULL)
         return NULL_PTR;
+    
+    size_t buffer_size = BUFFER_SIZE;
+    char* buffer = (char*)malloc(buffer_size * sizeof(char));
 
-    char buffer[BUFFER_SIZE];
+    if (!buffer)
+        return INVALID_MEMORY;
+
     int index_line = 1;
     int match_index = 0;
 
-    while (fgets(buffer, BUFFER_SIZE, input_file)) {
+    while (fgets(buffer, buffer_size, input_file)) {
+        while (!strchr(buffer, '\n') && !feof(input_file)) {
+            buffer = resize_buffer(buffer, &buffer_size);
+
+            if (buffer == NULL) {
+                printf("Invalid memory\n");
+                return INVALID_MEMORY;
+            }
+
+            fgets(buffer + strlen(buffer), buffer_size - strlen(buffer), input_file);
+        }
+
         char* ptr = buffer;
-        /*
-        printf("\t\tline: %s\n", buffer);
-        */
-        if ((ptr = my_strstr(ptr, substring)) != NULL)
-        {
-            matches[match_index].line_number = index_line;
-            matches[match_index].position = ptr - buffer + 1;
+
+        while ((ptr = my_strstr(ptr, substring)) != NULL) {
+
+            if (match_index >= *max_matches) {
+                *max_matches *= 2;
+                *matches = (MATCH*)realloc(*matches, *max_matches * sizeof(MATCH));
+                
+                if (*matches == NULL)
+                    return NULL_PTR;
+            }
+
+            (*matches)[match_index].line_number = index_line;
+            (*matches)[match_index].position =  ptr - buffer + 1;
 
             match_index++;
+            ptr += strlen(substring);
         }
 
         index_line++;

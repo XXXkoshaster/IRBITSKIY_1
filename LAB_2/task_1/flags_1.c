@@ -52,6 +52,11 @@ void flag_n(char* str)
 
 void flag_c(char** strings, int argc)
 {       
+    if (argc < 4) {
+        printf("Not enough arguments\n");
+        return;
+    }
+    
     char* result = (char*)malloc(1 * sizeof(char));
     
     if (!result) {

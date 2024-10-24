@@ -26,7 +26,7 @@ enum ERRORS has_finite_representation(int* flag, int numerator, int denominator,
     numerator /= common_divisor;
     denominator /= common_divisor; 
 
-    // Проверяем делимость знаменателя на простые множители основания системы счисления
+    // Проверяем делимость знаменателя на основание системы счисления
     while(denominator % base == 0)
         denominator /= base;
 
@@ -52,9 +52,15 @@ enum ERRORS check_finite_representation(int base, int count_fractions, ...)
     va_list args;
     va_start(args, count_fractions);
 
+    if (base < 2)
+        return INVALID_INPUT;
+
     for (int i = 0; i < count_fractions; i++) {
         double fraction = va_arg(args, double);
         
+        if (fraction <= 0 || fraction >= 1)
+            return INVALID_INPUT;
+
         double numerator = fraction;
         double denominator = 1;
 

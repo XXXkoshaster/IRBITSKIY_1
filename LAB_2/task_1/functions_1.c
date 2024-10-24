@@ -4,8 +4,12 @@ size_t length_string(char* str)
 {
     size_t length = 0;
     
-    while(*(str++)) {
+    if (!str)
+        return length;
+
+    while(*str) {
         length++;
+        str++;
     }
 
     return length;
@@ -22,8 +26,9 @@ void revesed_string(char* str, char* revesed_str, size_t len)
 
 void print_string(char* str)
 {
-    while(*(str++)) {
+    while(*str) {
         printf("%c", *str);
+        str++;
     }
 
     printf("\n");
@@ -96,6 +101,7 @@ void c_string(char** new_string, char** argv, int argc)
     char** lexemes = allocate_lexemes(count_strings);
 
     if (!lexemes) {
+        printf("Memory allocation error\n");
         return;
     }
 
@@ -122,7 +128,7 @@ void initialize_random(char* value) {
 
 void concatenate_random_strings(char** new_string, char** lexemes, unsigned int count_strings) {
     int indexes[count_strings];
-    for (int i = 0; i < count_strings; i++) {
+    for (unsigned int i = 0; i < count_strings; i++) {
         indexes[i] = i;
     }
     
@@ -136,12 +142,18 @@ void concatenate_random_strings(char** new_string, char** lexemes, unsigned int 
 
     for (unsigned int i = 0; i < count_strings; i++) {
         int index = indexes[i];
+        
+        if (lexemes[index] == NULL) 
+            continue;
+
         size_t new_length = length_string(lexemes[index]) + length_string(*new_string) + 1;
 
         char* tmp = (char*)realloc(*new_string, new_length * sizeof(char));
+        
         if (!tmp) {
             free(*new_string);
             free_lexemes(lexemes, count_strings);
+            printf("Memory allocation error\n");
             return;
         }
 
@@ -151,7 +163,7 @@ void concatenate_random_strings(char** new_string, char** lexemes, unsigned int 
 }
 
 void free_lexemes(char** lexemes, unsigned int count_strings) {
-    for (int i = 0; i < count_strings; i++) {
+    for (unsigned int i = 0; i < count_strings; i++) {
         free(lexemes[i]);
     }
     free(lexemes);

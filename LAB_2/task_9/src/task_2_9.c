@@ -1,8 +1,8 @@
 #include "../include/functions_2_9.h"
 
-int main(int argc, char** argv)
+int main()
 {
-    enum ERRORS status = check_finite_representation(25, 3, 0.04, 0.004, 0.37);
+    enum ERRORS status = check_finite_representation(2, 3, 0.2, 0.25, 0.125);
     
     switch (status)
     {

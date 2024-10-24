@@ -15,9 +15,6 @@ char* my_strstr(const char* src, const char* origin)
             origin_ptr = (char*)origin;   
 
             while(*src && *origin) {
-                /*
-                printf("\t\tsrc: %c, origin: %c\n", *src, *origin);
-                */
                 trigger_out = trigger_out && (*src == *origin);
                 src++;
                 origin++;
@@ -65,7 +62,7 @@ enum ERRORS process_file(char* file_name, const char* substring)
         return FILE_NOT_FOUND;
 
     int max_count_matches = count_lines(file);
-
+    
     if (max_count_matches == -1) {
         fclose(file);
         return INVALID_INPUT;
@@ -78,7 +75,11 @@ enum ERRORS process_file(char* file_name, const char* substring)
         return NULL_PTR;
     }
 
-    if (find_substring_in_file(file, substring, matches) == NULL_PTR) {
+    memset(matches, 0, max_count_matches * sizeof(MATCH));
+    
+    enum ERRORS result = find_substring_in_file(file, substring, &matches, &max_count_matches);
+
+    if (result == NULL_PTR) {
         free(matches);
         fclose(file);
         return INVALID_MEMORY;
@@ -99,7 +100,20 @@ void print_matches(char* file_name, MATCH* matches, int max_count_matches)
     printf("File %s:\n", file_name);
 
     for (int j = 0; j < max_count_matches; j++) {
-        if (matches[j].line_number != 0)
-            printf("\tline: %d, position: %d\n", matches[j].line_number, matches[j].position);
+        if (matches[j].line_number <= 0)
+            break;
+        
+        printf("\tline: %d, position: %d\n", matches[j].line_number, matches[j].position);
     }
+}
+
+char* resize_buffer(char* buffer, size_t* buffer_size)
+{
+    *buffer_size *= 2;
+    buffer = (char*)realloc(buffer, *buffer_size * sizeof(char));
+
+    if (buffer == NULL)
+        return NULL;
+
+    return buffer;
 }

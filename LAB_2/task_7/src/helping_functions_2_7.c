@@ -2,6 +2,6 @@
 
 double function(double x)
 {
-    return 4 - exp(x) - 2 * x * x;
+    return pow(x - 1, 2) / (x - 1);
 }
 

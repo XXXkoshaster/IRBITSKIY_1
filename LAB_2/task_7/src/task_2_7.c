@@ -1,9 +1,9 @@
 #include "../include/functions_2_7.h"
 
-int main(int argc, char** argv)
+int main()
 {
     double result;
-    enum ERRORS status = dichotomy_method(0, 2, 0.000001, function, &result);
+    enum ERRORS status = dichotomy_method(-1, 2, 0.001, function, &result);
         
     switch (status)
     {

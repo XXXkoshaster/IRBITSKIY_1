@@ -1,8 +1,8 @@
 #include "../include/functions_2_3.h"
 
-int main(int argc, char** argv)
+int main()
 {
-    enum ERRORS status = get_matches("test \n", 2, "../../../tests/task_2_3/test_1.txt", "../../../tests/task_2_3/test_2.txt");
+    enum ERRORS status = get_matches("test\n", 2, "../../../tests/task_2_3/test_1.txt", "../../../tests/task_2_3/test_2.txt");
     
     switch (status)
     {
