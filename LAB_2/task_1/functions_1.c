@@ -143,8 +143,10 @@ void concatenate_random_strings(char** new_string, char** lexemes, unsigned int 
     for (unsigned int i = 0; i < count_strings; i++) {
         int index = indexes[i];
         
-        if (lexemes[index] == NULL) 
-            continue;
+        if (!new_string || !lexemes) {
+            printf("Invalid input\n");
+            return;
+        }
 
         size_t new_length = length_string(lexemes[index]) + length_string(*new_string) + 1;
 

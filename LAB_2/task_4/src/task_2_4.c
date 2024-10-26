@@ -8,7 +8,7 @@ int main()
     enum ERRORS status_2 = method_gorner(3, 3, 0.0, 4.0, 0.0);
     heandler_status(status_2);
 
-    enum ERRORS status_3 = find_kaprekar_number(16, 3, "9", "F", "B");  
+    enum ERRORS status_3 = find_kaprekar_number(10, 3, "9", "45", "1");  
     heandler_status(status_3);
 
     return 0;
