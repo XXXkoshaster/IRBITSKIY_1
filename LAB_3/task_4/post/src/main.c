@@ -159,6 +159,10 @@ void case_4(POST* post)
         return;
     }
 
+    for (int i = 0; i < post->mail_count; i++) {
+        print_mail(&post->mails[i]);
+    }
+
     return;
 }
 
