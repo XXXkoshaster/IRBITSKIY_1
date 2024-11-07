@@ -10,10 +10,10 @@
 
 typedef struct {
     int id;
-    char* first_name;
-    char* last_name;
-    char* group;
-    unsigned char* marks;
+    char first_name[50];
+    char last_name[50];
+    char group[50];
+    unsigned char marks[5];
 } STUDENT;
 
 RESPONSES read_studens(const char* filename, STUDENT** students, int count);

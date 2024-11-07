@@ -12,6 +12,11 @@ RESPONSES create_mail(ADDRESS recipient_address, double weight, const char* post
     mail->time_delivery = *(create_string_decorator(time_delivery));
     mail->time_creation = *(create_string_decorator(time_creation));
 
+    if (mail->postal_id.data == NULL || mail->time_delivery.data == NULL || mail->time_creation.data == NULL) {
+        delete_mail(mail);
+        return create_error_response(INVALID_ALLOCATION_MEMORY, "invalid allocation memory for mail fields");
+    }
+    
     return create_success_response(mail);
 }
 
@@ -133,7 +138,7 @@ RESPONSES print_mail(const MAIL* mail)
 {
     if (mail == NULL)
         return create_error_response(INVALID_INPUT, "mail is NULL");
-    
+    printf("\n");
     printf("Postal ID: %s\n", mail->postal_id.data);
     printf("Recipient Address: %s, %s, %d, %s, %d, %s\n",
            mail->recipient_address.city.data,
@@ -145,20 +150,6 @@ RESPONSES print_mail(const MAIL* mail)
     printf("Weight: %.2f\n", mail->weight);
     printf("Creation Time: %s\n", mail->time_creation.data);
     printf("Delivery Time: %s\n", mail->time_delivery.data);
-
-    return create_success_response(NULL);
-}
-
-RESPONSES print_all_mails(const POST* post)
-{
-    if (post == NULL)
-        return create_error_response(INVALID_INPUT, "post is NULL");
-
-    for (int i = 0; i < post->mail_count; i++) {
-        RESPONSES response = print_mail(&post->mails[i]);
-        handle_error(response);
-        printf("\n");
-    }
 
     return create_success_response(NULL);
 }

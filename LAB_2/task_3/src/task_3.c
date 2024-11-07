@@ -2,7 +2,7 @@
 
 int main()
 {
-    enum ERRORS status = get_matches("test\n", 2, "../../../tests/task_2_3/test_1.txt", "../../../tests/task_2_3/test_2.txt");
+    enum ERRORS status = get_matches("n\n\n", 2, "../../../tests/task_2_3/test_1.txt", "../../../tests/task_2_3/test_2.txt");
     
     switch (status)
     {

@@ -8,8 +8,7 @@ enum ERRORS coef_calculation(double x, double *coefs, int count, double *res)
     *res = 0;
     double power_x = 1.0;
 
-    for (int i = 0; i < count; ++i)
-    {
+    for (int i = 0; i < count; ++i) {
         *res += coefs[i] * power_x;
         power_x *= x;
     }
@@ -17,7 +16,7 @@ enum ERRORS coef_calculation(double x, double *coefs, int count, double *res)
     return DONE;
 }
 
-enum ERRORS calc_differ(double *coefs, int count, int iter)
+enum ERRORS calculation_differ(double *coefs, int count, int iter)
 {
     for (int j = 0; j < count - iter - 1; j++)
         coefs[j] = (j + 1) * coefs[j + 1];
@@ -66,7 +65,7 @@ enum ERRORS decomposition_of_a_polynomial(int count, double eps, double x, doubl
 
         (*result)[i] /= factorial(i);
 
-        calc_differ(inp_coef, count, i);
+        calculation_differ(inp_coef, count, i);
     
         if (i > 0 && fabs((*result)[i] - prev_coef) < eps)
             break;

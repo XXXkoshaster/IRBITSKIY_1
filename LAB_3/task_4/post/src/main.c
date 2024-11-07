@@ -136,7 +136,7 @@ void case_2(POST* post)
 void case_3(POST* post)
 {
     char postal_id[100];
-    printf("Enter postal ID: ");
+    printf("\nEnter postal ID: ");
     scanf("%s", postal_id);
 
     RESPONSES response = find_mail_by_postal_id(post, postal_id);

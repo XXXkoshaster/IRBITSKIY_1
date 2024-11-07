@@ -42,7 +42,7 @@ RESPONSES compare_string(const STRING* str_1, const STRING* str_2)
         return create_error_response(INVALID_INPUT, "str_1 or str_2 is NULL");
 
     if (str_1->length != str_2->length)
-        return create_success_response((void*)(intptr_t)(str_1->length - str_2->length));
+        return create_success_response((void*)((str_1->length - str_2->length)));
 
     return create_success_response((void*)(intptr_t)(my_strcmp(str_1->data, str_2->data)));
 }

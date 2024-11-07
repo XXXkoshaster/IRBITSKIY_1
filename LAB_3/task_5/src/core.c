@@ -15,20 +15,7 @@ RESPONSES read_studens(const char* filename, STUDENT** students, int count)
     
     for (int i = 0; i < count; i++) {
         STUDENT* student = *students + i;
-        student->first_name = (char*)malloc(sizeof(char) * 50);
-        student->last_name = (char*)malloc(sizeof(char) * 50);
-        student->group = (char*)malloc(sizeof(char) * 50);
-        student->marks = (unsigned char*)malloc(sizeof(unsigned char) * 5);
-
-        if (!student->first_name || !student->last_name || !student->group || !student->marks) {
-            free(student->first_name);
-            free(student->last_name);
-            free(student->group);
-            free(student->marks);
-            fclose(file);
-            return create_error_response(INVALID_ALLOCATION_MEMORY, "Invalid allocation memory");
-        }
-
+        
         fscanf(file, "%d", &student->id);
         fscanf(file, "%s", student->first_name);
         fscanf(file, "%s", student->last_name);
@@ -61,7 +48,7 @@ RESPONSES search_students_by_last_name(STUDENT* students, int count, const char*
     for (int i = 0; i < count; i++) {
         if (my_strcmp(students[i].last_name, last_name) == 0) {
             *results = (STUDENT*)realloc(*results, sizeof(STUDENT) * (*results_count + 1));
-            if (!(*results))
+             if (!(*results))
                 return create_error_response(INVALID_ALLOCATION_MEMORY, "Invalid allocation memory");
             
             (*results)[*results_count] = students[i];

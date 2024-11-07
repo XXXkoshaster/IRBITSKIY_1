@@ -19,6 +19,11 @@ enum ERRORS check_convex_polygon(int count_coordinates, ...)
 
     VERTEX* array = (VERTEX*)malloc(count_coordinates * sizeof(VERTEX));
 
+    if (array == NULL) {
+        printf("Array is NULL\n");
+        return NULL_PTR;
+    }
+
     va_list coordinates;
     va_start(coordinates, count_coordinates);
 
@@ -27,11 +32,6 @@ enum ERRORS check_convex_polygon(int count_coordinates, ...)
         array[i].y = va_arg(coordinates, double);
     }
 
-    if (array == NULL) {
-        printf("Array is NULL\n");
-        va_end(coordinates);
-        return NULL_PTR;
-    }
 
     if (!is_convex_polygon(array, count_coordinates)) {
         printf("Polygon is not convex\n");

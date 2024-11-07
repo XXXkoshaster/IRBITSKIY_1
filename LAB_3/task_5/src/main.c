@@ -5,7 +5,6 @@
 #define SUCCESS 0
 
 void coount_students(FILE* file, int* count);
-void free_students(STUDENT* students, int count);
 void handle_user_input(STUDENT* students, int count);
 RESPONSES read_studens_from_file(const char* filename, STUDENT** students, int* count);
 void case_1(STUDENT* students, int count);
@@ -33,7 +32,6 @@ int main(int argc, char** argv)
   }
 
   handle_user_input(students, count);
-  free_students(students, count);
 
   return SUCCESS;
 }
@@ -255,18 +253,6 @@ void case_7(STUDENT* students, int count)
   } else {
     printf("Error writing students to file (%s)\n", response.message);
   }
-}
-
-void free_students(STUDENT* students, int count)
-{
-  for (int i = 0; i < count; i++) {
-    free(students[i].first_name);
-    free(students[i].last_name);
-    free(students[i].group);
-    free(students[i].marks);
-  }
-  
-  free(students);
 }
 
 void coount_students(FILE* file, int* count)
