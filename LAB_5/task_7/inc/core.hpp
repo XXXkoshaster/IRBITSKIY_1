@@ -62,7 +62,7 @@ public:
     virtual ~Product() = default;
 }; 
 
-class PerishableProduct : public Product
+class PerishableProduct final : public Product
 {
 private:
     time_t _expiration_date;
@@ -93,7 +93,7 @@ public:
     ~PerishableProduct() = default;
 };
 
-class ElectronicProduct : public Product
+class ElectronicProduct final : public Product
 {
 private:
     unsigned int _warranty_period;
@@ -119,7 +119,7 @@ public:
     ~ElectronicProduct() = default;
 };
 
-class BuildingMaterial : public Product
+class BuildingMaterial final : public Product
 {
 private:
     bool _flammability;
@@ -166,10 +166,11 @@ public:
 
     Warehouse& operator=(const Warehouse& other)
     {
-        if (&other != this)
+        if (&other != this) {
             for (Product* prod : _invetory)
                 delete prod;
-        
+        }
+
         _invetory.clear();
 
         for (Product* prod : other._invetory) 
