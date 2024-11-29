@@ -38,7 +38,7 @@ int ul_get_values_count(
 
 int ul_insert_value(
     p_unidirectional_list to_insert_into,
-    T value,
+    void* value,
     size_t target_position)
 {
     int i;
@@ -88,7 +88,7 @@ int ul_insert_value(
 int ul_remove_value(
     p_unidirectional_list to_remove_from,
     size_t target_position,
-    T *removed_value_box)
+    void* *removed_value_box)
 {
     p_unidirectional_list_item ptr, temp;
     int i;
@@ -125,7 +125,7 @@ int ul_remove_value(
 int ul_traverse_datas(
     p_unidirectional_list to_traverse,
     void (*callback)(
-        T *value_to_traverse,
+        void* *value_to_traverse,
         size_t index))
 {
     p_unidirectional_list_item iterator;

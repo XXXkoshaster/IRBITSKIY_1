@@ -12,11 +12,9 @@ typedef struct {
     double income;
 } LIVER;
 
-typedef LIVER T;
-
 typedef struct unidirectional_list_item
 {
-    T data;
+    void* data;
     struct unidirectional_list_item *next;
 } unidirectional_list_item, *p_unidirectional_list_item;
 
@@ -34,18 +32,18 @@ int ul_get_values_count(
 
 int ul_insert_value(
     p_unidirectional_list to_insert_into,
-    T value,
+    void* value,
     size_t target_position);
 
 int ul_remove_value(
     p_unidirectional_list to_remove_from,
     size_t target_position,
-    T *removed_value_box);
+    void* *removed_value_box);
 
 int ul_traverse_datas(
     p_unidirectional_list to_traverse,
     void (*callback)(
-        T *value_to_traverse,
+        void* *value_to_traverse,
         size_t index));
 
 int ul_traverse_items(

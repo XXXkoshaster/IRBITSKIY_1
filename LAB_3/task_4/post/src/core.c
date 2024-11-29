@@ -60,7 +60,7 @@ RESPONSES delete_post(POST* post)
 
     return create_success_response(NULL);
 }
-
+//MAIL*
 RESPONSES add_mail_to_post(POST* post, MAIL mail)
 {
     if(post == NULL)

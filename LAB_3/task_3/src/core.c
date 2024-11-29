@@ -30,12 +30,12 @@ RESPONSES read_employees(const char* filename, int* count)
     if (!file)
         return create_error_response(FILE_NOT_FOUND, "File not found");
     
-    EMPLOYEE* employees = malloc(sizeof(EMPLOYEE));
+    EMPLOYEE* employees = (EMPLOYEE*) (sizeof(EMPLOYEE));
     if (!employees)
         return create_error_response(INVALID_ALLOCATION_MEMORY, "Invalid allocation array");
 
     EMPLOYEE tmp;
-
+    //buffer
     while (fscanf(file, "%d %49s %49s %lf", &tmp.id, tmp.first_name, tmp.last_name, &tmp.salary) == 4) {
         employees = realloc(employees, (*count + 1) * sizeof(EMPLOYEE));
         if (!employees) {
