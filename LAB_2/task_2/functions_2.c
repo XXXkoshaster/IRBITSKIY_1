@@ -8,7 +8,7 @@ enum errors geom_average(double *result, int count, ...)
     if (result == NULL)
         return NULL_PTR;
 
-    *result = 1;
+    *result = 1.0;
 
     va_list args;
     va_start(args, count);
@@ -47,7 +47,7 @@ int check_overflow(double* number)
     return 0;
 }
 
-enum errors fast_pow(double* result, double base, int power)
+enum errors my_fast_pow(double* result, double base, int power)
 {
     if (power == 0)
     {
@@ -71,7 +71,7 @@ enum errors fast_pow(double* result, double base, int power)
     {
         double tmp;
         
-        fast_pow(&tmp, base, power / 2);
+        my_fast_pow(&tmp, base, power / 2);
 
         if (check_overflow(&tmp))
             return MY_OVERFLOW;
@@ -80,7 +80,7 @@ enum errors fast_pow(double* result, double base, int power)
     } else {
         double tmp;
 
-        fast_pow(&tmp, base, power - 1);
+        my_fast_pow(&tmp, base, power - 1);
 
         if (check_overflow(&tmp))
             return MY_OVERFLOW;

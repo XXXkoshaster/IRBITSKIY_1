@@ -2,7 +2,7 @@
 
 int main()
 {
-    enum ERRORS status = check_finite_representation(2, 3, 0.2, 0.25, 0.125);
+    enum ERRORS status = check_finite_representation(8, 2, 0.125, 0.3);
     
     switch (status)
     {

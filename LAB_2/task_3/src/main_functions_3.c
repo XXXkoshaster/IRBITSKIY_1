@@ -1,83 +1,216 @@
 #include "../include/functions_2_3.h"
 
-enum ERRORS find_substring_in_file(FILE* input_file, const char* substring, MATCH** matches, int* max_matches)
+RESULT* get_matches(const char* substr, ...)
 {
-    if (input_file == NULL || substring == NULL)
-        return NULL_PTR;
+    if (!substr)
+        return NULL;
     
-    size_t buffer_size = BUFFER_SIZE;
-    char* buffer = (char*)malloc(buffer_size * sizeof(char));
-
-    if (!buffer)
-        return INVALID_MEMORY;
-
-    int index_line = 1;
-    int match_index = 0;
-
-    while (fgets(buffer, buffer_size, input_file)) {
-        while (!strchr(buffer, '\n') && !feof(input_file)) {
-            buffer = resize_buffer(buffer, &buffer_size);
-
-            if (buffer == NULL) {
-                printf("Invalid memory\n");
-                return INVALID_MEMORY;
-            }
-
-            fgets(buffer + strlen(buffer), buffer_size - strlen(buffer), input_file);
-        }
-
-        char* ptr = buffer;
-
-        while ((ptr = my_strstr(ptr, substring)) != NULL) {
-
-            if (match_index >= *max_matches) {
-                *max_matches *= 2;
-                *matches = (MATCH*)realloc(*matches, *max_matches * sizeof(MATCH));
-                
-                if (*matches == NULL)
-                    return NULL_PTR;
-            }
-
-            (*matches)[match_index].line_number = index_line;
-            (*matches)[match_index].position =  ptr - buffer + 1;
-
-            match_index++;
-            ptr += strlen(substring);
-        }
-
-        index_line++;
+    char* substring = replace_tabs_with_spaces(substr, 4);
+    if (!substring) {
+        return NULL; 
     }
 
-    return DONE;
+    int substring_length = my_strlen(substring);
+    if (substring_length == 0)
+    {
+        return NULL; 
+    }
+
+    int* prefix_array = (int*)malloc(substring_length * sizeof(int));
+    if (!prefix_array)
+    {
+        return NULL; 
+    }
+
+    create_arr_prefix(prefix_array, substring);
+
+    va_list args;
+    va_start(args, substr);
+
+    RESULT* results = NULL; // Основной массив результатов
+    RESULT* temp_results = NULL;
+    int file_count = 0; // Счётчик обработанных файлов
+
+    while (1)
+    {
+        char *filename = va_arg(args, char*);
+        if (!filename)
+            break; // Конец списка аргументов
+
+        file_count++;
+
+        temp_results = (RESULT *)realloc(results, file_count * sizeof(RESULT));
+        if (!temp_results)
+        {
+            free(results);
+            free(prefix_array);
+            return NULL; // Ошибка выделения памяти
+        }
+        results = temp_results;
+
+        MATCH *matches = NULL; // Для хранения результатов поиска в текущем файле
+        int match_count = find_substr(substring, filename, prefix_array, substring_length, &matches);
+
+        results[file_count - 1].file_name = filename;
+
+        if (match_count == FILE_NOT_FOUND)
+        {
+            results[file_count - 1].status = FILE_NOT_FOUND;
+            continue;
+        }
+
+        if (match_count == INVALID_MEMORY)
+        {
+            results[file_count - 1].status = INVALID_MEMORY;
+            continue;
+        }
+
+        results[file_count - 1].status = DONE;
+        results[file_count - 1].match_array = matches;
+        results[file_count - 1].match_count = match_count;
+    }
+
+    if (file_count > 0)
+    {
+        results[0].processed_file_count = file_count; // Сохраняем общее количество файлов
+    }
+
+    free(prefix_array); 
+    va_end(args);
+    return results;
 }
 
-enum ERRORS get_matches(const char* substring, int count_files, ...)
+void create_arr_prefix(int* arr_prefix, const char* image)
 {
-    enum ERRORS error = validate_input(substring, count_files);
+    if (!image) return;
+
+    arr_prefix[0] = 0;
+    int i = 1, j = 0; 
+
+    while (image[i] != '\0') {
+        if (image[i] == image[j]) {
+            arr_prefix[i] = j + 1;
+            ++j;
+            ++i;
+        } else if (j == 0) {
+            arr_prefix[i] = 0;
+            ++i;
+        } else {
+            j = arr_prefix[j - 1];
+        }
+    }
+}
+
+enum ERRORS find_substr(char *substr, const char* file_name, int arr_prefix[], int substr_len, MATCH **matches)
+{
+    FILE* file = fopen(file_name, "r");
+    if (!file)
+        return FILE_NOT_FOUND;
+
+    char current_char;
+    int substr_line_count = count_lines(substr); // Количество строк в подстроке
+    int match_count = 0; // Количество найденных совпадений
+
+    long long file_position = 0; // Позиция в файле
+    int line_number = 1; // Номер текущей строки
+    int match_length = 0; // Длина текущего совпадения
+
+    int match_start_position = 0; // Начало вхождения подстроки
     
-    if (error != DONE)
-        return error;
+    MATCH* temp_matches;
 
-    va_list files;
-    va_start(files, count_files);
+    while ((current_char = fgetc(file)) != EOF)
+    {
+        ++file_position;
 
-    for (int i = 0; i < count_files; i++) {
-        char* file_name = va_arg(files, char*);
-
-        if (file_name == NULL) {
-            va_end(files);
-            return WRONG_PARAMETERS;
+        // Если символ не совпадает, то двигаем подстроку
+        while (match_length > 0 && current_char != substr[match_length])
+            match_length = arr_prefix[match_length - 1];
+   
+        // Если символ совпадает, то увеличиваем совпадение строки и подстроки
+        if (current_char == '\n') {
+            file_position = 0;
+            ++line_number;
         }
 
-        error = process_file(file_name, substring);
+        if (match_length == 0 && current_char == substr[match_length])
+            match_start_position = file_position;
 
-        if (error != DONE) {
-            va_end(files);
-            return error;
+        if (current_char == substr[match_length])
+            ++match_length;
+
+        // Если нашли полное совпадение
+        if (match_length == substr_len)
+        {
+            ++match_count;
+
+            // Перераспределение памяти для хранения совпадений
+            temp_matches = (MATCH *)realloc(*matches, sizeof(MATCH) * match_count);
+            if (!temp_matches)
+                return INVALID_MEMORY;
+
+            *matches = temp_matches;
+            temp_matches[match_count - 1].line_number = line_number - substr_line_count; // Номер строки начала совпадения
+            temp_matches[match_count - 1].char_position = match_start_position; // Позиция символа начала совпадения
+            match_length = arr_prefix[match_length - 1]; // Сброс длины совпадения
+        }
+    }
+    
+    fclose(file);
+    
+    return match_count;
+}
+
+int my_strlen(const char* str)
+{
+    int length = 0;
+    
+    while(*str) {
+        ++length;
+        ++str;
+    }
+
+    return length;
+}
+
+int count_lines(const char *str)
+{
+    int count_lines = 0;
+    while(*str) {
+        if (*str == '\n')
+            ++count_lines;
+        ++str;
+    }
+
+    return count_lines;
+}
+
+char* replace_tabs_with_spaces(const char* str, int tab_size) {
+    int length = my_strlen(str);
+    int new_length = length;
+    
+    for (int i = 0; i < length; i++) {
+        if (str[i] == '\t') {
+            new_length += (tab_size - 1);
         }
     }
 
-    va_end(files);
+    char* new_str = (char*)malloc(new_length + 1);
+    if (!new_str) {
+        return NULL;
+    }
+
+    int j = 0;
+    for (int i = 0; i < length; i++) {
+        if (str[i] == '\t') {
+            for (int k = 0; k < tab_size; k++)
+                new_str[j++] = ' ';
+        } else {
+            new_str[j++] = str[i];
+        }
+    }
     
-    return DONE;
+    new_str[j] = '\0';
+
+    return new_str;
 }

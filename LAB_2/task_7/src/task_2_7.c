@@ -3,7 +3,7 @@
 int main()
 {
     double result;
-    enum ERRORS status = dichotomy_method(-1, 2, 0.001, function, &result);
+    enum ERRORS status = dichotomy_method(1., 2.5, 1.e-10, function, &result);
         
     switch (status)
     {

@@ -25,7 +25,7 @@ enum ERRORS method_gorner(double x, int degree, ...)
     }
 
     printf("Result: %lf\n", result);
-
+ 
     va_end(coefficients);
     return DONE;
 }

@@ -14,14 +14,18 @@ enum ERRORS find_kaprekar_number(int base, size_t count_nums, ...)
 
     for (size_t i = 0; i < count_nums; i++) {
         char* num_in_base = va_arg(nums, char*);
-        int decimal_num = convert_to_decimal(num_in_base, base);
+        long long decimal_num = convert_to_decimal(num_in_base, base);
 
         if (decimal_num < 0) {
-            printf("Invalid number was given");
+            printf("Invalid number was given\n");
             return INVALID_INPUT;
         }
 
-        if (is_kaprekar(decimal_num, base)) {
+        unsigned long long square = decimal_num * decimal_num;
+        if (check_overflow(square, base))
+            return MY_OVERFLOW;
+
+        if (is_kaprekar(decimal_num, square, base)) {
             printf("Number %s is Kaprekar\n", num_in_base);
             count_founded++;
         } else {
@@ -40,26 +44,25 @@ enum ERRORS find_kaprekar_number(int base, size_t count_nums, ...)
     return DONE;
 }
 
-int is_kaprekar(int num, int base)
+int is_kaprekar(long long num, unsigned long long square, long long base)
 {
     if (num == 1) 
         return 1;
 
-    int square = num * num;
     char* square_str = decimal_to_base(square, base);
 
     int len = strlen(square_str);
     
-    for (int i = 1; i < len; i++) {
-        char left_str[65], right_str[65];
+    for (long long i = 1; i < len; i++) {
+        char left_str[256], right_str[256];
 
         strncpy(left_str, square_str, i);
         left_str[i] = '\0';
 
         strcpy(right_str, square_str + i);
 
-        int left = convert_to_decimal(left_str, base);
-        int right = convert_to_decimal(right_str, base);
+        long long left = convert_to_decimal(left_str, base);
+        long long right = convert_to_decimal(right_str, base);
 
         if (right > 0 && left + right == num) {
             return 1;

@@ -7,9 +7,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <limits.h>
 
 #define BUFFER_SIZE 256
-#define DBL_MAX 1.7976931348623158e+308
+#define EPSILON 1.e-9
+
 
 enum ERRORS{
     DONE,
@@ -29,14 +31,14 @@ typedef struct {
 enum ERRORS check_convex_polygon(int count_coordinateså, ...);
 enum ERRORS method_gorner(double x, int degree, ...);
 enum ERRORS find_kaprekar_number(int base, size_t count_nums, ...);
-int is_kaprekar(int num, int base);
+int is_kaprekar(long long num, unsigned long long square, long long base);
 
 void heandler_status(enum ERRORS status);
-double cross_product(VERTEX a, VERTEX b, VERTEX c);
-int is_convex_polygon(VERTEX* vertexes, int count_coordinates);
+double dot(const VERTEX* a, const VERTEX* b);
 int char_to_int(char c);
-char* decimal_to_base(int decimal, int base);
-int convert_to_decimal(char* str, int base);
-int check_overflow(double a, double b);
+char* decimal_to_base(long long decimal, int base);
+long long convert_to_decimal(char* str, int base);
+int check_overflow(long long a, int b);
+int is_convex(const VERTEX* v, int n);
 
 #endif

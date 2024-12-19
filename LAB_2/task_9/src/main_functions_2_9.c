@@ -1,12 +1,5 @@
 #include "../include/functions_2_9.h"
 
-/*
-В общем случае, дробь имеет конечное представление в системе счисления с основанием (b), 
-если её знаменатель (после сокращения) делится только на простые множители, 
-которые являются делителями основания (b).
-.*/
-
-// Функция для проверки, имеет ли дробь конечное представление в заданной системе счисления
 enum ERRORS has_finite_representation(int* flag, int numerator, int denominator, int base)
 {
     if (denominator == 0)
@@ -16,9 +9,6 @@ enum ERRORS has_finite_representation(int* flag, int numerator, int denominator,
         return INVALID_INPUT;
 
     if (numerator == 0)
-        return DONE;
-
-    if (gcd(numerator, denominator) == 1)
         return DONE;
 
     // Сокращение дроби
@@ -44,6 +34,7 @@ enum ERRORS has_finite_representation(int* flag, int numerator, int denominator,
         return DONE;
     }
 
+    *flag = 0;
     return DONE;
 }
 
@@ -71,7 +62,7 @@ enum ERRORS check_finite_representation(int base, int count_fractions, ...)
 
         int flag = 0;
 
-        enum ERRORS status = has_finite_representation(&flag, numerator, denominator, base);
+        enum ERRORS status = has_finite_representation(&flag, (int)numerator, (int)denominator, base);
 
         if(status != DONE) {
             va_end(args);

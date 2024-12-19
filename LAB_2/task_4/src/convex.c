@@ -1,65 +1,81 @@
 #include "../include/functions_2_4.h"
 
-enum ERRORS check_convex_polygon(int count_coordinates, ...)
-{
-    if (count_coordinates <= 0) {
-        printf("Count of coordinates is less than 0\n");
-        return INVALID_INPUT;
-    }
-
-    if (count_coordinates % 2 != 0) {
-        printf("Count of coordinates is not even\n");
-        return INVALID_INPUT;
-    }
-
-    if ((count_coordinates / 2) < 3.0) {
-        printf("Count of coordinates is less than 3\n");
-        return INVALID_INPUT;
-    }
-
-    VERTEX* array = (VERTEX*)malloc(count_coordinates * sizeof(VERTEX));
-
-    if (array == NULL) {
-        printf("Array is NULL\n");
-        return NULL_PTR;
-    }
-
-    va_list coordinates;
-    va_start(coordinates, count_coordinates);
-
-    for (int i = 0; i < count_coordinates; i++) {
-        array[i].x = va_arg(coordinates, double);
-        array[i].y = va_arg(coordinates, double);
-    }
-
-
-    if (!is_convex_polygon(array, count_coordinates)) {
-        printf("Polygon is not convex\n");
-        va_end(coordinates);
-        return DONE;
-    }
-
-    printf("Polygon is convex\n");
-    va_end(coordinates);
-    return DONE;
+// Функция для вычисления скалярного произведения
+double dot(const VERTEX* a, const VERTEX* b) {
+    return a->x * b->x + a->y * b->y;
 }
 
-double cross_product(VERTEX a, VERTEX b, VERTEX c)
-{
-    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-} 
+// Функция для проверки на выпуклость
+int is_convex(const VERTEX* v, int n) {
+    VERTEX prev = v[n - 1];
+    VERTEX cur, dir, normal;
+    double d, dp;
+    int sign, s;
+    sign = 0;
 
-int is_convex_polygon(VERTEX* vertexes, int count_coordinates)
-{
-    int sign = cross_product(vertexes[0], vertexes[1], vertexes[2]) > 0;
+    for (int i = 0; i < n; i++) {
+        cur = v[i];
+        // Вычисляем вектор направления ребра
+        dir.x = cur.x - prev.x;
+        dir.y = cur.y - prev.y;
 
-    for (int i = 1; i < count_coordinates; i++) {
-        if ((cross_product(vertexes[i], vertexes[(i + 1) % count_coordinates], vertexes[(i + 2) % count_coordinates]) > 0) != sign) {
-            return 0;
+        // Вычисляем нормаль к ребру
+        normal.x = dir.y;
+        normal.y = -dir.x;
+
+        // Уравнение прямой: (p, n) + d = 0
+        d = -(dot(&normal, &cur));
+
+        // Проверяем знак точек
+        sign = 0;
+        for (int j = 0; j < n; j++) {
+            dp = d + dot(&normal, &v[j]);
+            if (fabs(dp) < EPSILON) 
+                continue; 
+            
+            s = dp > 0 ? 1 : -1; 
+            
+            if (sign == 0) 
+                sign = s; 
+            else if (sign != s) 
+                return 0; // Найдено несовпадение знаков
         }
+        prev = cur;
     }
 
     return 1;
 }
 
+enum ERRORS check_convex_polygon(int count_vertexes, ...)
+{
+    if (count_vertexes < 3)
+        return INVALID_INPUT;
 
+    va_list vertexes;
+    va_start(vertexes, count_vertexes);
+    
+    VERTEX* polygon = (VERTEX *)malloc(count_vertexes * sizeof(VERTEX));
+    if (!polygon) {
+        va_end(vertexes);
+        return INVALID_MEMORY;
+    }
+
+    for (int i = 0; i < count_vertexes; i++) {
+        VERTEX vertex = va_arg(vertexes, VERTEX);
+        polygon[i] = vertex;
+    }
+
+    if (!is_convex(polygon, count_vertexes)) {
+        printf("Polyon is not convex\n");
+        free(polygon);
+        va_end(vertexes);
+        return DONE;
+    }
+
+    printf("Polyon is convex\n");
+
+    free(polygon);
+    va_end(vertexes);
+
+    return DONE;
+}

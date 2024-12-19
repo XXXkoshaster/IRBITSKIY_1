@@ -1,0 +1,27 @@
+int a;
+char b;
+float c;
+double d;
+
+int* ptr;
+char** double_ptr;
+float*** triple_ptr;
+
+int arr[10];
+char buffer[256];
+float matrix[3][3];
+
+int (*func_ptr)();
+float (*calc_ptr)(int, float);
+
+int* array_of_ptrs[5];
+char (*ptr_to_func)(double);
+float** array_of_ptrs_to_ptrs[10];
+
+int {b; 
+float*; 
+int[10] arr;
+double (*ptr_func();
+
+int (*(*complex)[5])(double);  
+char* str = "hello"; 

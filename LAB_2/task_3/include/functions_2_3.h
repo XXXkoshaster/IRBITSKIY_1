@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 1024
 
 enum ERRORS{
     DONE,
@@ -18,20 +18,24 @@ enum ERRORS{
     INVALID_MEMORY,
     FILE_NOT_FOUND
 };
-
 typedef struct {
     int line_number;
-    int position;
+    int char_position;
 } MATCH;
 
-enum ERRORS find_substring_in_file(FILE* input_file, const char* substring, MATCH** matches, int* max_matches);
-enum ERRORS get_matches(const char* substring, int count_files, ...);
+typedef struct {
+    enum ERRORS status;
+    MATCH* match_array; // массив вхождений
+    int match_count; 
+    char* file_name;
+    int processed_file_count; // кол-во обработанных файлов
+} RESULT;
 
-enum ERRORS validate_input(const char* substring, int count_files);
-enum ERRORS process_file(char* file_name, const char* substring);
-void print_matches(char* file_name, MATCH* matches, int max_count_matches);
-char* my_strstr(const char* src, const char* origin);
-int count_lines(FILE* file);
-char* resize_buffer(char* buffer, size_t* buffer_size);
+RESULT* get_matches(const char* substring, ...);
+void create_arr_prefix(int* arr_prefix, const char* image);
+enum ERRORS find_substr(char *substr, const char* file_name, int arr_prefix[], int substr_len, MATCH **matches);
+int count_lines(const char *str);
+int my_strlen(const char* str);
+char* replace_tabs_with_spaces(const char* str, int tab_size);
 
 #endif

@@ -5,12 +5,14 @@ int char_to_int(char c)
     if (isdigit(c))
         return c - '0';
     else if (isalpha(c))
-        return tolower(c) - 'a' + 10;
+        return toupper(c) - 'A' + 10;
     return -1; 
 }
 
-char* decimal_to_base(int decimal, int base)
+char* decimal_to_base(long long decimal, int base)
 {
+    static int ll_size = sizeof(long long) * 8;
+
     if (decimal == 0) {
         char* result = (char*)malloc(2 * sizeof(char));
         result[0] = '0';
@@ -18,7 +20,7 @@ char* decimal_to_base(int decimal, int base)
         return result; 
     }
 
-        char* result = (char*)malloc(33 * sizeof(char)); // Максимальная длина для 32-битного числа
+    char* result = (char*)malloc(ll_size * sizeof(char));
     int index = 0;
     int is_negative = 0;
 
@@ -53,33 +55,22 @@ char* decimal_to_base(int decimal, int base)
     return result;
 }
 
-int convert_to_decimal(char* str, int base) {
-    int num = 0;
+long long convert_to_decimal(char* str, int base) {
+    long long num = 0;
+
     while (*str) {
-        int value;
+        int value = char_to_int(*str);
 
-        if (*str >= '0' && *str <= '9') {
-            value = *str - '0';
-
-        } else if (*str >= 'A' && *str <= 'Z') {
-            value = *str - 'A' + 10;
-
-        } else if (*str >= 'a' && *str <= 'z') {
-            value = *str - 'a' + 10;
-
-        } else {
+        if (value == -1 || value >= base)
             return -1;
-        }
-
-        if (value >= base) {
+    
+        if (check_overflow(num, base)) 
             return -1;
-        }
-        if (check_overflow(num, base)) {
-            return -1;
-        }
+        
         num = num * base + value;
         str++;
     }
+
     return num;
 }
 
@@ -115,8 +106,8 @@ void heandler_status(enum ERRORS status)
     }
 }
 
-int check_overflow(double a, double b) {
-    if (a > 0 && b > DBL_MAX / a) {
+int check_overflow(long long num, int base) {
+    if (num > (LLONG_MAX - base) / base) {
         return 1;
     }
     return 0;
